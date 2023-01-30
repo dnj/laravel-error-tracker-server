@@ -1,6 +1,5 @@
 <?php
 
-use dnj\ErrorTracker\Contracts\LogLevel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +12,11 @@ return new class() extends Migration {
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->integer('application_id');
+            $table->integer('app_id');
 
-            $table->foreign('application_id')
+            $table->foreign('app_id')
                 ->references('id')
-                ->on('applications')
+                ->on('apps')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
@@ -30,7 +29,11 @@ return new class() extends Migration {
                 ->onDelete('cascade');
 
             $table->dateTime('read_at')->nullable();
-            $table->enum('level', LogLevel::cases());
+            $table->enum('level', ['DEBUG',
+                'INFO',
+                'WARN',
+                'ERROR',
+                'FATAL', ]);
             $table->string('message');
             $table->string('date')->nullable();
             $table->timestamps();
