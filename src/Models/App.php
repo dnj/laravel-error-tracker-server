@@ -3,6 +3,9 @@
 namespace dnj\ErrorTracker\Laravel\Server\Models;
 
 use dnj\ErrorTracker\Contracts\IApp;
+use dnj\ErrorTracker\Database\Factories\AppFactory;
+use dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\Traits\Filterable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,99 +19,74 @@ use Illuminate\Database\Eloquent\Model;
  */
 class App extends Model implements IApp
 {
-    /**
-     * @return int
-     */
+    use Filterable;
+    use HasFactory;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     */
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return array|null
-     */
     public function getExtra(): ?array
     {
         return $this->extra;
     }
 
-    /**
-     * @param array|null $extra
-     */
     public function setExtra(?array $extra): void
     {
-        $this->extra = $extra;
+        $this->extra = json_encode($extra);
     }
 
-    /**
-     * @return int|null
-     */
     public function getOwner(): ?int
     {
         return $this->owner;
     }
 
-    /**
-     * @param int|null $owner
-     */
     public function setOwner(?int $owner): void
     {
         $this->owner = $owner;
     }
 
-    /**
-     * @return string
-     */
     public function getOwnerIdColumn(): string
     {
         return $this->owner_id_column;
     }
 
-    /**
-     * @param string $OwnerIdColumn
-     */
     public function setOwnerIdColumn(string $OwnerIdColumn): void
     {
         $this->owner_id_column = $OwnerIdColumn;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt(): \DateTime
     {
         return $this->created_at;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdatedAt(): \DateTime
     {
         return $this->updated_at;
     }
 
-    /**
-     * @return int|null
-     */
     public function getOwnerId(): ?int
     {
         return $this->getOwnerIdColumn();
+    }
+
+    /**
+     * @return AppFactory
+     */
+    protected static function newFactory(): AppFactory
+    {
+        return AppFactory::new();
     }
 }
