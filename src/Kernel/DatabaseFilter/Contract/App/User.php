@@ -8,6 +8,6 @@ class User extends FiltersAbstract
 {
     public function handel()
     {
-        $this->builder->where('user', 'LIKE', $this->attribute);
+        $this->builder->where('user', '=', $this->attribute);
     }
 }
