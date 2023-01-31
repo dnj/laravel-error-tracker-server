@@ -84,9 +84,6 @@ class App extends Model implements IApp
         return $this->getOwnerIdColumn();
     }
 
-    /**
-     * @return AppFactory
-     */
     protected static function newFactory(): AppFactory
     {
         return AppFactory::new();

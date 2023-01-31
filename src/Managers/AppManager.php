@@ -8,22 +8,11 @@ use dnj\ErrorTracker\Laravel\Server\Models\App;
 
 class AppManager implements IAppManager
 {
-    /**
-     * @param array $filters
-     * @return iterable
-     */
     public function search(array $filters): iterable
     {
         return App::filter($filters)->get();
     }
 
-    /**
-     * @param string $title
-     * @param array|null $extra
-     * @param int|null $owner
-     * @param bool $userActivityLog
-     * @return IApp
-     */
     public function store(string $title, ?array $extra = null, ?int $owner = null, bool $userActivityLog = false): IApp
     {
         $app = new App(
@@ -39,7 +28,6 @@ class AppManager implements IAppManager
 
         return $app;
     }
-
 
     public function update(int|IApp $app, array $changes, bool $userActivityLog = false): IApp
     {

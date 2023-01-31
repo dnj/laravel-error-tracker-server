@@ -9,9 +9,6 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AppManagerTest extends TestCase
 {
-    /**
-     * @return void
-     */
     public function testUserCanSearch(): void
     {
         App::factory(2)->create();
@@ -21,9 +18,6 @@ class AppManagerTest extends TestCase
         $response->assertStatus(ResponseAlias::HTTP_OK); // 200
     }
 
-    /**
-     * @return void
-     */
     public function testUserCanStore(): void
     {
         $app = App::factory()->create();
@@ -42,9 +36,6 @@ class AppManagerTest extends TestCase
             });
     }
 
-    /**
-     * @return void
-     */
     public function testUpdateApp(): void
     {
         $app = App::factory()->create();
@@ -63,9 +54,6 @@ class AppManagerTest extends TestCase
             });
     }
 
-    /**
-     * @return void
-     */
     public function testDestroy(): void
     {
         $app = App::factory()->create();

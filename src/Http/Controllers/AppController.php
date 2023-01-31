@@ -48,10 +48,6 @@ class AppController extends Controller
         return UpdateResource::make($update);
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
     public function destroy(int $id): void
     {
         $this->appManager->destroy($id);

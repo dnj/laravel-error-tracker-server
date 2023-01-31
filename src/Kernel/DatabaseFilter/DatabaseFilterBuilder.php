@@ -14,7 +14,6 @@ class DatabaseFilterBuilder
     public function build(): Builder
     {
         foreach ($this->attributes as $key => $attribute) {
-
             $normalizeName = ucfirst(Str::camel($key));
             $className = sprintf('%s\\%s', $this->namespace, $normalizeName);
             if (!class_exists($className)) {
