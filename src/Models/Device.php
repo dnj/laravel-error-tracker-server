@@ -3,6 +3,9 @@
 namespace dnj\ErrorTracker\Laravel\Server\Models;
 
 use dnj\ErrorTracker\Contracts\IDevice;
+use dnj\ErrorTracker\Database\Factories\DeviceFactory;
+use dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\Traits\Filterable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,26 +19,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Device extends Model implements IDevice
 {
-    /**
-     * @return int
-     */
+    use Filterable;
+    use HasFactory;
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string|null
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * @param string|null $title
-     * @return void
-     */
     public function setTitle(?string $title): void
     {
         $this->title = $title;
@@ -49,9 +45,6 @@ class Device extends Model implements IDevice
         return $this->extra;
     }
 
-    /**
-     * @param string|null $extra
-     */
     public function setExtra(?string $extra): void
     {
         $this->extra = $extra;
@@ -62,45 +55,33 @@ class Device extends Model implements IDevice
         return $this->owner_id;
     }
 
-    /**
-     * @param int $owner_id
-     * @return void
-     */
     public function setOwnerId(int $owner_id): void
     {
         $this->owner_id = $owner_id;
     }
 
-    /**
-     * @return string
-     */
     public function getOwnerIdColumn(): string
     {
         return $this->owner_id_column;
     }
 
-    /**
-     * @param string $owner_id_column
-     * @return void
-     */
     public function setOwnerIdColumn(string $owner_id_column): void
     {
         $this->owner_id_column = $owner_id_column;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getCreatedAt(): \DateTime
     {
         return $this->created_at;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdatedAt(): \DateTime
     {
         return $this->updated_at;
+    }
+
+    protected static function newFactory(): DeviceFactory
+    {
+        return DeviceFactory::new();
     }
 }
