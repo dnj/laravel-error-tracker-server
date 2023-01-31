@@ -5,6 +5,7 @@ namespace dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\Traits;
 use dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\DatabaseFilterBuilder;
 use dnj\ErrorTracker\Laravel\Server\Models\App;
 use dnj\ErrorTracker\Laravel\Server\Models\Device;
+use dnj\ErrorTracker\Laravel\Server\Models\Log;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
@@ -20,7 +21,8 @@ trait Filterable
     {
         return match (__CLASS__) {
             App::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\App',
-            Device::class => ''
+            Device::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\Device',
+            Log::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\App\\Log',
         };
     }
 }
