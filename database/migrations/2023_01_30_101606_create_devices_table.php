@@ -11,11 +11,11 @@ return new class() extends Migration {
     public function up(): void
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->id();
-            $table->string('title')->nullable();
-            $table->string('extra')->nullable();
-            $table->integer('owner_id');
-            $table->string('owner_id_column');
+            $table->bigIncrements('id');
+            $table->string('title');
+            $table->json('extra')->nullable();
+            $table->unsignedBigInteger('owner')->nullable();
+            $table->boolean('user_activity_log')->default(false);
             $table->timestamps();
         });
     }
