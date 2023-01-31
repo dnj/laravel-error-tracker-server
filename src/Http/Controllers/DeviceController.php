@@ -25,7 +25,7 @@ class DeviceController extends Controller
         $search = $this->deviceManager->search($searchRequest->only(
             [
                 'title',
-                'extra',
+                'user',
                 'owner',
             ]
         ));
