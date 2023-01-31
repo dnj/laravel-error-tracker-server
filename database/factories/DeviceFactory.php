@@ -13,18 +13,11 @@ class DeviceFactory extends Factory
     {
         return [
             'title' => fake()->word,
-            'extra' => [],
-            'owner_id' => null,
-            'owner_id_column' => null,
+            'extra' => serialize(fake()->words(3)),
+            'owner' => rand(1, 5),
             'created_at' => fake()->dateTime,
             'updated_at' => fake()->dateTime,
         ];
     }
 
-    public function withOwnerId(int $ownerId)
-    {
-        return $this->state(fn () => [
-            'owner_id' => $ownerId,
-        ]);
-    }
 }
