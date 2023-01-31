@@ -1,10 +1,76 @@
 <?php
 
-namespace dnj\ErrorTracker\Laravel\Server\Tests\Fature;
+namespace dnj\ErrorTracker\Laravel\Server\Tests\Feature;
 
+use dnj\ErrorTracker\Laravel\Server\Models\App;
 use dnj\ErrorTracker\Laravel\Server\Tests\TestCase;
+use Illuminate\Testing\Fluent\AssertableJson;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AppManagerTest extends TestCase
 {
-    // TODO
+    /**
+     * @return void
+     */
+    public function testUserCanSearch(): void
+    {
+        App::factory(2)->create();
+
+        $response = $this->get(route('app.search', ['title' => 'test', 'owner' => 1]));
+
+        $response->assertStatus(ResponseAlias::HTTP_OK); // 200
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserCanStore(): void
+    {
+        $app = App::factory()->create();
+
+        $data = [
+            'title' => 'Test App',
+            'extra' => ['test_key' => 'test_value'],
+            'owner' => 1,
+            'userActivityLog' => true,
+        ];
+
+        $this->postJson(route('app.store'), $data)
+            ->assertStatus(201)
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateApp(): void
+    {
+        $app = App::factory()->create();
+
+        $changes = [
+            'title' => 'Test App edited',
+            'extra' => ['test_key edited' => 'test_value edited'],
+            'owner' => 3,
+            'userActivityLog' => false,
+        ];
+
+        $this->putJson(route('app.update', ['id' => $app->id]), $changes)
+            ->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+    }
+
+    /**
+     * @return void
+     */
+    public function testDestroy(): void
+    {
+        $app = App::factory()->create();
+
+        $this->deleteJson(route('app.destroy', ['id' => $app->id]))
+            ->assertStatus(ResponseAlias::HTTP_OK);
+    }
 }
