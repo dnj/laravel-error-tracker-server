@@ -3,7 +3,13 @@
 	"license": "MIT",
 	"autoload": {
 		"psr-4": {
-			"dnj\\ErrorTracker\\Laravel\\Server\\": "src/"
+			"dnj\\ErrorTracker\\Laravel\\Server\\": "src/",
+			"dnj\\ErrorTracker\\Database\\Factories\\": "database/factories/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"dnj\\ErrorTracker\\Laravel\\Server\\Tests\\": "tests/"
 		}
 	},
 	"require": {
