@@ -22,6 +22,8 @@ class App extends Model implements IApp
     use Filterable;
     use HasFactory;
 
+    protected $fillable = ['title'];
+
     public function getId(): int
     {
         return $this->id;
