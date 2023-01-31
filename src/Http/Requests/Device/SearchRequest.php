@@ -10,7 +10,7 @@ class SearchRequest extends FormRequest
     {
         return [
             'title' => ['string', 'nullable'],
-            'extra' => ['int', 'array'],
+            'user' => ['int', 'nullable'],
             'owner' => ['int', 'nullable'],
         ];
     }
