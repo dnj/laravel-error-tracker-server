@@ -1,5 +1,6 @@
 <?php
 
+use dnj\ErrorTracker\Laravel\Server\Constants\LogLevelConstants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,31 +13,16 @@ return new class() extends Migration {
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->integer('app_id');
-
-            $table->foreign('app_id')
-                ->references('id')
-                ->on('apps')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->integer('device_id');
-
-            $table->foreign('device_id')
-                ->references('id')
-                ->on('devices')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
-            $table->dateTime('read_at')->nullable();
-            $table->enum('level', ['DEBUG',
-                'INFO',
-                'WARN',
-                'ERROR',
-                'FATAL', ]);
-            $table->string('message');
-            $table->string('date')->nullable();
+            $table->unsignedBigInteger('app_id');
+            $table->unsignedBigInteger('device_id');
+            $table->enum('level', [LogLevelConstants::$statuses]);
+            $table->text('message');
+            $table->json('data')->nullable();
+            $table->boolean('read')->nullable();
             $table->timestamps();
+
+            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('device_id')->references('id')->on('devices');
         });
     }
 
