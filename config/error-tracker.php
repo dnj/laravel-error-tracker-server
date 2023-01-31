@@ -6,6 +6,6 @@ return [
 
     'routes' => [
         'enable' => true,
-        'prefix' => '',
+        'prefix' => 'log',
     ],
 ];
