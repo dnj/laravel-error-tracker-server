@@ -22,6 +22,8 @@ class Device extends Model implements IDevice
     use Filterable;
     use HasFactory;
 
+    protected $fillable = ['title'];
+
     public function getId(): int
     {
         return $this->id;
