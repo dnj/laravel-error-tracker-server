@@ -22,7 +22,7 @@ trait Filterable
         return match (__CLASS__) {
             App::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\App',
             Device::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\Device',
-            Log::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\App\\Log',
+            Log::class => 'dnj\\ErrorTracker\\Laravel\\Server\\Kernel\\DatabaseFilter\\Contract\\Log',
         };
     }
 }
