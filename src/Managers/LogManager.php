@@ -7,13 +7,13 @@ use dnj\ErrorTracker\Contracts\IDevice;
 use dnj\ErrorTracker\Contracts\ILog;
 use dnj\ErrorTracker\Contracts\ILogManager;
 use dnj\ErrorTracker\Contracts\LogLevel;
+use dnj\ErrorTracker\Laravel\Server\Models\Log;
 
 class LogManager implements ILogManager
 {
-    // TODO
     public function search(array $filters): iterable
     {
-        // TODO: Implement search() method.
+        return Log::filter($filters)->get();
     }
 
     public function store(int|IApp $app, IDevice|int $device, LogLevel $level, string $message, ?array $data = null, ?array $read = null, bool $userActivityLog = false): ILog
@@ -33,6 +33,7 @@ class LogManager implements ILogManager
 
     public function destroy(ILog|int $log, bool $userActivityLog = false): void
     {
-        // TODO: Implement destroy() method.
+        $model = Log::query()->findOrFail($log);
+        $model->delete();
     }
 }
