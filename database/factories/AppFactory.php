@@ -15,7 +15,6 @@ class AppFactory extends Factory
             'title' => fake()->word,
             'extra' => serialize(fake()->words(3)),
             'owner' => rand(1, 10),
-//            'owner_id_column' => fake()->name,
             'created_at' => fake()->dateTime,
             'updated_at' => fake()->dateTime,
         ];
