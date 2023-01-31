@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int              id
- * @property int              application_id
+ * @property int              app_id
  * @property int              device_id
  * @property int|null         reader_user_id
  * @property \DateTime|null   read_at
@@ -114,19 +114,9 @@ class Log extends Model implements ILog
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTime $created_at): void
-    {
-        $this->created_at = $created_at;
-    }
-
     public function getUpdatedAt(): \DateTime
     {
         return $this->updated_at;
-    }
-
-    public function setUpdatedAt(\DateTime $updated_at): void
-    {
-        $this->updated_at = $updated_at;
     }
 
     public function getAppId(): int
