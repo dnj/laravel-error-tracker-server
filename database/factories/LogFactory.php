@@ -2,6 +2,9 @@
 
 namespace dnj\ErrorTracker\Database\Factories;
 
+use dnj\ErrorTracker\Laravel\Server\Constants\LogLevelConstants;
+use dnj\ErrorTracker\Laravel\Server\Models\App;
+use dnj\ErrorTracker\Laravel\Server\Models\Device;
 use dnj\ErrorTracker\Laravel\Server\Models\Log;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,13 +14,16 @@ class LogFactory extends Factory
 
     public function definition(): array
     {
+        $app = App::factory(1)->create();
+        $device = Device::factory(1)->create();
+
         return [
-            'title' => fake()->word,
-            'extra' => [],
-            'owner_id' => fake()->numberBetween(1, 20),
-            'owner_id_column' => null,
-            'created_at' => fake()->dateTime,
-            'updated_at' => fake()->dateTime,
+            'app_id' => $app[0]->id,
+            'device_id' => $device[0]->id,
+            'level' => fake()->randomElement(LogLevelConstants::$statuses),
+            'message' => fake()->sentence,
+            'data' => json_encode(fake()->sentences(3)),
+            'read' => fake()->boolean,
         ];
     }
 }
