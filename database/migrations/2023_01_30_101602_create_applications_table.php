@@ -13,9 +13,8 @@ return new class() extends Migration {
         Schema::create('apps', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->json('extra');
-            $table->integer('owner');
-            $table->integer('owner_id_column');
+            $table->json('extra')->nullable();
+            $table->integer('owner')->nullable();
             $table->timestamps();
         });
     }
