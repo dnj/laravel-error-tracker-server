@@ -6,9 +6,6 @@ use dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\Abstract\FiltersAbstra
 
 class Apps extends FiltersAbstract
 {
-    /**
-     * @return void
-     */
     public function handel(): void
     {
         $this->builder->whereIn('app_id', $this->attribute);

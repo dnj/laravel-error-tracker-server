@@ -7,6 +7,7 @@ if (!function_exists('getEnumValues')) {
         foreach ($cases as $case) {
             $result[] = $case->name;
         }
+
         return $result;
     }
 }

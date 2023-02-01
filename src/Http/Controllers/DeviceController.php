@@ -16,10 +16,6 @@ class DeviceController extends Controller
     {
     }
 
-    /**
-     * @param SearchRequest $searchRequest
-     * @return SearchResource
-     */
     public function search(SearchRequest $searchRequest): SearchResource
     {
         $search = $this->deviceManager->search($searchRequest->only(
@@ -55,5 +51,4 @@ class DeviceController extends Controller
     {
         $this->deviceManager->destroy($id);
     }
-
 }

@@ -50,7 +50,6 @@ class DeviceManagerTest extends TestCase
             });
     }
 
-
     public function testCanUpdate()
     {
         $app = Device::factory()->create();

@@ -53,7 +53,6 @@ class LogController extends Controller
 
     public function markAsRead()
     {
-
     }
 
     public function markAsUnRead()

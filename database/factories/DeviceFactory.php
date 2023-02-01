@@ -19,5 +19,4 @@ class DeviceFactory extends Factory
             'updated_at' => fake()->dateTime,
         ];
     }
-
 }

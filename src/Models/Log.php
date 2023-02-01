@@ -121,9 +121,6 @@ class Log extends Model implements ILog
         return $this->app_id;
     }
 
-    /**
-     * @param int $app_id
-     */
     public function setAppId(int $app_id): Log
     {
         $this->app_id = $app_id;

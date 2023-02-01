@@ -11,4 +11,3 @@ class Title extends FiltersAbstract
         $this->builder->where('title', 'LIKE', '%'.$this->attribute.'%');
     }
 }
-
