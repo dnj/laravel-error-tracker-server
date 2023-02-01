@@ -2,6 +2,7 @@
 
 namespace dnj\ErrorTracker\Laravel\Server\Models;
 
+use Carbon\Carbon;
 use dnj\ErrorTracker\Contracts\ILog;
 use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Database\Factories\LogFactory;
@@ -13,11 +14,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property int              id
  * @property int              app_id
  * @property int              device_id
- * @property int|null         reader_user_id
- * @property \DateTime|null   read_at
+ * @property array|null            read
  * @property mixed            level
  * @property string           message
- * @property string|null      date
+ * @property string|null      data
  * @property \DateTime        created_at
  * @property \DateTime        updated_at
  */
@@ -31,19 +31,16 @@ class Log extends Model implements ILog
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function getRead(): array
     {
-        $this->id = $id;
+        return $this->read;
     }
 
-    public function getApplicationId(): int
+    public function setRead(array|null $read): Log
     {
-        return $this->application_id;
-    }
+        $this->read = json_encode($read);
 
-    public function setApplicationId(int $application_id): void
-    {
-        $this->application_id = $application_id;
+        return $this;
     }
 
     public function getDeviceId(): int
@@ -51,29 +48,23 @@ class Log extends Model implements ILog
         return $this->device_id;
     }
 
-    public function setDeviceId(int $device_id): void
+    public function setDeviceId(int $device_id): Log
     {
         $this->device_id = $device_id;
+
+        return $this;
     }
 
     public function getReaderUserId(): ?int
     {
-        return $this->reader_user_id;
-    }
-
-    public function setReaderUserId(?int $reader_user_id): void
-    {
-        $this->reader_user_id = $reader_user_id;
+        return optional(json_decode($this->read))->userId;
     }
 
     public function getReadAt(): ?\DateTime
     {
-        return $this->read_at;
-    }
+        $readAt = optional(json_decode($this->read))->readAt;
 
-    public function setReadAt(?\DateTime $read_at): void
-    {
-        $this->read_at = $read_at;
+        return $readAt ? Carbon::make($readAt) : $readAt;
     }
 
     /**
@@ -84,9 +75,11 @@ class Log extends Model implements ILog
         return $this->level;
     }
 
-    public function setLevel(mixed $level): void
+    public function setLevel(mixed $level): Log
     {
         $this->level = $level;
+
+        return $this;
     }
 
     public function getMessage(): string
@@ -94,19 +87,23 @@ class Log extends Model implements ILog
         return $this->message;
     }
 
-    public function setMessage(string $message): void
+    public function setMessage(string $message): Log
     {
         $this->message = $message;
+
+        return $this;
     }
 
-    public function getDate(): ?string
+    public function getData(): ?array
     {
-        return $this->date;
+        return json_decode($this->data);
     }
 
-    public function setDate(?string $date): void
+    public function setData(?string $data): Log
     {
-        $this->date = $date;
+        $this->data = $data;
+
+        return $this;
     }
 
     public function getCreatedAt(): \DateTime
@@ -121,15 +118,17 @@ class Log extends Model implements ILog
 
     public function getAppId(): int
     {
-        return $this->getApplicationId();
+        return $this->app_id;
     }
 
     /**
-     * @return array|mixed[]|null
+     * @param int $app_id
      */
-    public function getData(): ?array
+    public function setAppId(int $app_id): Log
     {
-        return $this->getData();
+        $this->app_id = $app_id;
+
+        return $this;
     }
 
     protected static function newFactory(): LogFactory
