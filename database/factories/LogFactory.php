@@ -20,7 +20,7 @@ class LogFactory extends Factory
         return [
             'app_id' => $app[0]->id,
             'device_id' => $device[0]->id,
-            'level' => fake()->randomElement(LogLevel::cases()),
+            'level' => LogLevel::INFO->name,
             'message' => fake()->sentence,
             'data' => json_encode([fake()->words(3)]),
             'read' => fake()->boolean,
