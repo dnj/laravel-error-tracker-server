@@ -1,6 +1,6 @@
 <?php
 
-use dnj\ErrorTracker\Laravel\Server\Constants\LogLevelConstants;
+use dnj\ErrorTracker\Contracts\LogLevel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,16 +13,14 @@ return new class() extends Migration {
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('app_id');
-            $table->unsignedBigInteger('device_id');
-            $table->enum('level', [LogLevelConstants::$statuses]);
+            $table->enum('level', getEnumValues(LogLevel::cases()));
             $table->text('message');
             $table->json('data')->nullable();
-            $table->boolean('read')->nullable();
-            $table->timestamps();
+            $table->json('read')->nullable();
 
-            $table->foreign('app_id')->references('id')->on('apps');
-            $table->foreign('device_id')->references('id')->on('devices');
+            $table->foreignId('app_id')->constrained('apps');
+            $table->foreignId('device_id')->constrained('devices');
+            $table->timestamps();
         });
     }
 
