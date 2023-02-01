@@ -18,7 +18,18 @@ class LogManager implements ILogManager
 
     public function store(int|IApp $app, IDevice|int $device, LogLevel $level, string $message, ?array $data = null, ?array $read = null, bool $userActivityLog = false): ILog
     {
-        // TODO: Implement store() method.
+        $model = new Log();
+
+        $model->setRead($read);
+        $model->setAppId($app);
+        $model->setLevel($level->name);
+        $model->setMessage($message);
+        $model->setDeviceId($device);
+        $model->setData($device);
+
+        $model->save();
+
+        return $model;
     }
 
     public function markAsRead(ILog|int $log, ?int $userId = null, ?\DateTimeInterface $readAt = null, bool $userActivityLog = false): ILog
