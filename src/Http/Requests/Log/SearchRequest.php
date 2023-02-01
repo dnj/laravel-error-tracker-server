@@ -2,7 +2,7 @@
 
 namespace dnj\ErrorTracker\Laravel\Server\Http\Requests\Log;
 
-use dnj\ErrorTracker\Laravel\Server\Constants\LogLevelConstants;
+use dnj\ErrorTracker\Contracts\LogLevel;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SearchRequest extends FormRequest
@@ -17,7 +17,7 @@ class SearchRequest extends FormRequest
             'devices.*' => ['exists:devices,id'],
 
             'levels' => ['array', 'nullable'],
-            'levels.*' => sprintf('in:%s', implode(',', LogLevelConstants::$statuses)),
+            'levels.*' => sprintf('in:%s', implode(',', getEnumValues(LogLevel::cases()))),
 
             'message' => ['string', 'nullable'],
             'unread' => ['bool', 'nullable'],
