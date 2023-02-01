@@ -15,10 +15,13 @@ class LogManagerTest extends TestCase
 {
     public function testLogSearch()
     {
+        $app = App::factory()->create();
+        $device = Device::factory()->create();
+
         $response = $this->get(route('log.search',
             [
-                'apps' => [1],
-                'devices' => [1],
+                'apps' => [$app->id],
+                'devices' => [$device->id],
                 'level' => LogLevel::INFO->name,
                 'message' => 'test',
                 'unread' => true,
