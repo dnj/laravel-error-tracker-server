@@ -2,7 +2,7 @@
 
 namespace dnj\ErrorTracker\Database\Factories;
 
-use dnj\ErrorTracker\Laravel\Server\Constants\LogLevelConstants;
+use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Laravel\Server\Models\App;
 use dnj\ErrorTracker\Laravel\Server\Models\Device;
 use dnj\ErrorTracker\Laravel\Server\Models\Log;
@@ -20,9 +20,9 @@ class LogFactory extends Factory
         return [
             'app_id' => $app[0]->id,
             'device_id' => $device[0]->id,
-            'level' => fake()->randomElement(LogLevelConstants::$statuses),
+            'level' => fake()->randomElement(LogLevel::cases()),
             'message' => fake()->sentence,
-            'data' => json_encode(fake()->sentences(3)),
+            'data' => json_encode([fake()->words(3)]),
             'read' => fake()->boolean,
         ];
     }
