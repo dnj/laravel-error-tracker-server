@@ -33,16 +33,11 @@ class LogController extends Controller
 
     public function store(StoreRequest $storeRequest): StoreResource
     {
-        $value = null;
-        foreach (LogLevel::cases() as $case) {
-            if ($case->name == $storeRequest->input('level')) {
-                $value = $case;
-            }
-        }
+        $levelValue = $this->getEnumValue($storeRequest);
         $log = $this->logManager->store(
             $storeRequest->input('app'),
             $storeRequest->input('device'),
-            $value,
+            $levelValue,
             $storeRequest->input('message'),
             $storeRequest->input('data'),
             $storeRequest->input('read'),
@@ -62,5 +57,17 @@ class LogController extends Controller
     public function destroy(int $id)
     {
         $this->logManager->destroy($id);
+    }
+
+    public function getEnumValue(StoreRequest $storeRequest): ?LogLevel
+    {
+        $value = null;
+        foreach (LogLevel::cases() as $case) {
+            if ($case->name == $storeRequest->input('level')) {
+                $value = $case;
+            }
+        }
+
+        return $value;
     }
 }
