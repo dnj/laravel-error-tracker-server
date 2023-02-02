@@ -41,7 +41,7 @@ class AppController extends Controller
         return StoreResource::make($store);
     }
 
-    public function update(int $id, UpdateRequest $updateRequest)
+    public function update(int $id, UpdateRequest $updateRequest): UpdateResource
     {
         $update = $this->appManager->update($id, $updateRequest->validated(), true);
 
