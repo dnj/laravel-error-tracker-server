@@ -24,6 +24,8 @@ Route::middleware(['api', SubstituteBindings::class])->group(function () {
     Route::group(['prefix' => 'log', 'as' => 'log.'], function () {
         Route::get('/search', [LogController::class, 'search'])->name('search');
         Route::post('/store', [LogController::class, 'store'])->name('store');
+        Route::put('/markAsRead', [LogController::class, 'markAsRead'])->name('mark.as.read');
+        Route::put('/markAsUnRead', [LogController::class, 'markAsUnRead'])->name('mark.as.un.read');
         Route::delete('/destroy/{id}', [LogController::class, 'destroy'])->name('destroy');
     });
 });
