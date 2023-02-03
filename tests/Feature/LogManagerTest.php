@@ -58,25 +58,43 @@ class LogManagerTest extends TestCase
 
     public function testMarkAsRead()
     {
-    }
+        $log = Log::factory()->create();
 
-    public function testCanNotMarkAsRead()
-    {
+        $data = [
+            'userId' => 1,
+            'readAt' => Carbon::now(),
+            'userActivityLog' => false,
+        ];
+
+        $this->putJson(route('log.mark_as_read', ['log' => $log->id]), $data)
+            ->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
     }
 
     public function testMarkAsUnRead()
     {
-    }
+        $log = Log::factory()->create();
 
-    public function testCanNotMarkAsUnRead()
-    {
+        $data = [
+            'userId' => 1,
+            'readAt' => Carbon::now(),
+            'userActivityLog' => false,
+        ];
+
+        $this->putJson(route('log.mark_as_read', ['log' => $log->id]), $data)
+            ->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
     }
 
     public function testCanDestroy()
     {
         $app = Log::factory()->create();
 
-        $this->deleteJson(route('device.destroy', ['id' => $app->id]))
+        $this->deleteJson(route('log.destroy', ['id' => $app->id]))
             ->assertStatus(ResponseAlias::HTTP_OK);
     }
 }
