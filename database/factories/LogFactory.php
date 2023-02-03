@@ -23,7 +23,7 @@ class LogFactory extends Factory
             'level' => LogLevel::INFO->name,
             'message' => fake()->sentence,
             'data' => json_encode([fake()->words(3)]),
-            'read' => fake()->boolean,
+            'read' => json_encode(['userId' => fake()->randomNumber(1, 5), 'readAt' => null]),
         ];
     }
 }
