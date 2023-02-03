@@ -34,12 +34,26 @@ class LogManager implements ILogManager
 
     public function markAsRead(ILog|int $log, ?int $userId = null, ?\DateTimeInterface $readAt = null, bool $userActivityLog = false): ILog
     {
-        // TODO: Implement markAsRead() method.
+        $readArray = (array) json_decode($log->getRead());
+
+        $readArray['readAt'] = (string) $readAt;
+        $readArray['userId'] = $userId;
+        $log->setRead($readArray);
+        $log->save();
+
+        return $log;
     }
 
     public function markAsUnread(ILog|int $log, bool $userActivityLog = false): ILog
     {
-        // TODO: Implement markAsUnread() method.
+        $readArray = (array) json_decode($log->getRead());
+
+        $readArray['readAt'] = null;
+        $readArray['userId'] = null;
+        $log->setRead($readArray);
+        $log->save();
+
+        return $log;
     }
 
     public function destroy(ILog|int $log, bool $userActivityLog = false): void
