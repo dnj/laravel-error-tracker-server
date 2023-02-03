@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int              id
  * @property int              app_id
  * @property int              device_id
- * @property array|null            read
+ * @property string|null            read
  * @property mixed            level
  * @property string           message
  * @property string|null      data
@@ -31,7 +31,7 @@ class Log extends Model implements ILog
         return $this->id;
     }
 
-    public function getRead(): array
+    public function getRead(): string
     {
         return $this->read;
     }
