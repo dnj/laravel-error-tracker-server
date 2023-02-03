@@ -9,10 +9,8 @@ class MarkAsReadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'Ilog' => ['required', 'integer'],
             'userId' => ['nullable', 'integer'],
             'readAt' => ['nullable', 'date'],
-            'userActivityLog' => ['required', 'boolean'],
         ];
     }
 }
