@@ -13,7 +13,7 @@ class AppManagerTest extends TestCase
     {
         App::factory(2)->create();
 
-        $response = $this->get(route('app.search', ['title' => 'test', 'owner' => 1]));
+        $response = $this->get(route('app.search', ['title' => 'test', 'owner' => 1, 'user' => 1]));
 
         $response->assertStatus(ResponseAlias::HTTP_OK); // 200
     }

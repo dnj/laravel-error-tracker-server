@@ -25,7 +25,7 @@ class LogManagerTest extends TestCase
                 'level' => LogLevel::INFO->name,
                 'message' => 'test',
                 'unread' => true,
-                // 'user' => '',
+                'user' => 1,
             ]
         ));
 

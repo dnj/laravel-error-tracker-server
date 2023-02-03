@@ -13,7 +13,7 @@ class DeviceManagerTest extends TestCase
     {
         Device::factory(2)->create();
 
-        $response = $this->get(route('device.search', ['title' => 'asdasd']));
+        $response = $this->get(route('device.search', ['title' => 'test', 'owner' => 1, 'user' => 1]));
 
         $response->assertStatus(ResponseAlias::HTTP_OK);
     }
