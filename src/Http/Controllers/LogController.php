@@ -3,7 +3,6 @@
 namespace dnj\ErrorTracker\Laravel\Server\Http\Controllers;
 
 use Carbon\Carbon;
-use dnj\ErrorTracker\Contracts\ILog;
 use dnj\ErrorTracker\Contracts\ILogManager;
 use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\Log\MarkAsReadRequest;
