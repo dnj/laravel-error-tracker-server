@@ -83,7 +83,7 @@ class LogManagerTest extends TestCase
             'userActivityLog' => false,
         ];
 
-        $this->putJson(route('log.mark_as_read', ['log' => $log->id]), $data)
+        $this->putJson(route('log.mark_as_unread', ['log' => $log->id]), $data)
             ->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
