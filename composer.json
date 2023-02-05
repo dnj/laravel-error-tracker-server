@@ -15,6 +15,15 @@
 			"dnj\\ErrorTracker\\Laravel\\Server\\Tests\\": "tests/"
 		}
 	},
+	"scripts": {
+		"test:phpunit": "vendor/bin/phpunit",
+		"test:codestyle": "vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no",
+		"test": [
+			"@test:types",
+			"@test:phpunit",
+			"@test:codestyle"
+		]
+	},
 	"require": {
 		"php": "^8.1",
 		"dnj/laravel-user-logger": "@dev",
