@@ -30,9 +30,9 @@
 		"dnj/error-tracker-contracts": "@dev"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "^9",
 		"friendsofphp/php-cs-fixer": "^3.11",
-		"orchestra/testbench": "^v7.21.0"
+		"phpunit/phpunit": "^9.6",
+		"orchestra/testbench": "^7.21"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
