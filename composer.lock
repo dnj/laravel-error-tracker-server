@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4baec4c6f3912b6d74406025cedf237b",
+    "content-hash": "7deaa7af2df05fbb0ea99c1df1449c7b",
     "packages": [
         {
             "name": "dnj/error-tracker-contracts",
