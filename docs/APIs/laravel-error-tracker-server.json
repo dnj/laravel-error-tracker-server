@@ -1,0 +1,505 @@
+{
+	"info": {
+		"_postman_id": "ec52ce74-5575-45d1-b39c-34988fcfca5f",
+		"name": "laravel-error-tracker-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "app",
+			"item": [
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/app/search?title=test&owner=1&user=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"search"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "test"
+								},
+								{
+									"key": "owner",
+									"value": "1"
+								},
+								{
+									"key": "user",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "test",
+									"type": "default"
+								},
+								{
+									"key": "extra",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "owner",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/app/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{base_url}}/api/app/destroy/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"destroy",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "test",
+									"type": "default"
+								},
+								{
+									"key": "extra",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "owner",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "id",
+									"value": "1",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/app/update/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"app",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "device",
+			"item": [
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/device/search?title=test&user=1&owner=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"device",
+								"search"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "test"
+								},
+								{
+									"key": "user",
+									"value": "1"
+								},
+								{
+									"key": "owner",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "test",
+									"type": "default"
+								},
+								{
+									"key": "extra",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "owner",
+									"value": "",
+									"type": "default"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "default",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/device/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"device",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{base_url}}/api/device/update/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"device",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{base_url}}/api/device/destroy/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"device",
+								"destroy",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "log",
+			"item": [
+				{
+					"name": "search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/log/search?apps=[1]&devices=[1]&levels=INFO&message=this message.&unread=false&user=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"log",
+								"search"
+							],
+							"query": [
+								{
+									"key": "apps",
+									"value": "[1]"
+								},
+								{
+									"key": "devices",
+									"value": "[1]"
+								},
+								{
+									"key": "levels",
+									"value": "INFO"
+								},
+								{
+									"key": "message",
+									"value": "this message."
+								},
+								{
+									"key": "unread",
+									"value": "false"
+								},
+								{
+									"key": "user",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "store",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "app",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "device",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "level",
+									"value": "INFO",
+									"type": "default"
+								},
+								{
+									"key": "message",
+									"value": "this message",
+									"type": "default"
+								},
+								{
+									"key": "data",
+									"value": "['test', '2022-02-02']",
+									"type": "default"
+								},
+								{
+									"key": "read",
+									"value": "['userId', 1, 'readAt', 2022-02-02]",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/log/store",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"log",
+								"store"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mark as read",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "readAt",
+									"value": "['userId', 1, 'readAt', 2022-02-02]",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/markAsRead/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"markAsRead",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mark as unread",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{base_url}}/api/markAsRead/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"markAsRead",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{base_url}}/api/log/update/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"log",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "127.0.0.1",
+			"type": "default"
+		}
+	]
+}
