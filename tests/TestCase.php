@@ -13,7 +13,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // config()->set('error-tracker.user_model', User::class);
+        config()->set('error-tracker.user_model', User::class);
     }
 
     protected function getPackageProviders($app)
