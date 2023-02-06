@@ -4,92 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d06f789a02429b8066b23bb2d2a3262a",
-    "packages": [
-        {
-            "name": "dnj/error-tracker-contracts",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dnj/php-error-tracker-contracts.git",
-                "reference": "b2be0241e1d622bef4da7f6b741246f8410c884c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dnj/php-error-tracker-contracts/zipball/b2be0241e1d622bef4da7f6b741246f8410c884c",
-                "reference": "b2be0241e1d622bef4da7f6b741246f8410c884c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.11"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "dnj\\ErrorTracker\\Contracts\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "support": {
-                "issues": "https://github.com/dnj/php-error-tracker-contracts/issues",
-                "source": "https://github.com/dnj/php-error-tracker-contracts/tree/master"
-            },
-            "time": "2023-01-28T20:45:11+00:00"
-        },
-        {
-            "name": "dnj/laravel-user-logger",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dnj/laravel-user-logger.git",
-                "reference": "9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dnj/laravel-user-logger/zipball/9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5",
-                "reference": "9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.11",
-                "orchestra/testbench": "^7.0",
-                "phpunit/phpunit": "^9"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "dnj\\UserLogger\\ServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "dnj\\UserLogger\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "support": {
-                "issues": "https://github.com/dnj/laravel-user-logger/issues",
-                "source": "https://github.com/dnj/laravel-user-logger/tree/master"
-            },
-            "time": "2023-01-03T10:34:23+00:00"
-        }
-    ],
+    "content-hash": "25b45632791f9f4f1296007bdb0c2d98",
+    "packages": [],
     "packages-dev": [
         {
             "name": "brick/math",
@@ -438,6 +354,89 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.2"
             },
             "time": "2022-10-27T11:44:00+00:00"
+        },
+        {
+            "name": "dnj/error-tracker-contracts",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dnj/php-error-tracker-contracts.git",
+                "reference": "b2be0241e1d622bef4da7f6b741246f8410c884c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dnj/php-error-tracker-contracts/zipball/b2be0241e1d622bef4da7f6b741246f8410c884c",
+                "reference": "b2be0241e1d622bef4da7f6b741246f8410c884c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.11"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "dnj\\ErrorTracker\\Contracts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/dnj/php-error-tracker-contracts/issues",
+                "source": "https://github.com/dnj/php-error-tracker-contracts/tree/master"
+            },
+            "time": "2023-01-28T20:45:11+00:00"
+        },
+        {
+            "name": "dnj/laravel-user-logger",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dnj/laravel-user-logger.git",
+                "reference": "9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dnj/laravel-user-logger/zipball/9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5",
+                "reference": "9d3b9018bd57289ea9377c3a1b6779a1b6b5adf5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.11",
+                "orchestra/testbench": "^7.0",
+                "phpunit/phpunit": "^9"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "dnj\\UserLogger\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "dnj\\UserLogger\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "support": {
+                "issues": "https://github.com/dnj/laravel-user-logger/issues",
+                "source": "https://github.com/dnj/laravel-user-logger/tree/master"
+            },
+            "time": "2023-01-03T10:34:23+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -3202,16 +3201,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.28",
+            "version": "9.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "954ca3113a03bf780d22f07bf055d883ee04b65e"
+                "reference": "e7b1615e3e887d6c719121c6d4a44b0ab9645555"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/954ca3113a03bf780d22f07bf055d883ee04b65e",
-                "reference": "954ca3113a03bf780d22f07bf055d883ee04b65e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e7b1615e3e887d6c719121c6d4a44b0ab9645555",
+                "reference": "e7b1615e3e887d6c719121c6d4a44b0ab9645555",
                 "shasum": ""
             },
             "require": {
@@ -3253,7 +3252,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "9.5-dev"
+                    "dev-master": "9.6-dev"
                 }
             },
             "autoload": {
@@ -3284,7 +3283,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.28"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.3"
             },
             "funding": [
                 {
@@ -3300,7 +3299,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-14T12:32:24+00:00"
+            "time": "2023-02-04T13:37:15+00:00"
         },
         {
             "name": "pimple/pimple",
@@ -4970,16 +4969,16 @@
         },
         {
             "name": "spatie/laravel-ray",
-            "version": "1.32.1",
+            "version": "1.32.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-ray.git",
-                "reference": "8ecf893a7af385e72b1f63cbd318fb00e2dca340"
+                "reference": "0c28a8274ec261a2857b4318b6f934af98024395"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/8ecf893a7af385e72b1f63cbd318fb00e2dca340",
-                "reference": "8ecf893a7af385e72b1f63cbd318fb00e2dca340",
+                "url": "https://api.github.com/repos/spatie/laravel-ray/zipball/0c28a8274ec261a2857b4318b6f934af98024395",
+                "reference": "0c28a8274ec261a2857b4318b6f934af98024395",
                 "shasum": ""
             },
             "require": {
@@ -5039,7 +5038,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/laravel-ray/issues",
-                "source": "https://github.com/spatie/laravel-ray/tree/1.32.1"
+                "source": "https://github.com/spatie/laravel-ray/tree/1.32.2"
             },
             "funding": [
                 {
@@ -5051,7 +5050,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2023-01-26T13:02:05+00:00"
+            "time": "2023-02-06T09:46:50+00:00"
         },
         {
             "name": "spatie/macroable",
