@@ -25,6 +25,10 @@ class Log extends Model implements ILog
 {
     use HasFactory;
 
+    protected $casts = [
+        'level' => LogLevel::class,
+    ];
+
     public function getId(): int
     {
         return $this->id;
@@ -125,5 +129,30 @@ class Log extends Model implements ILog
     protected static function newFactory(): LogFactory
     {
         return LogFactory::new();
+    }
+
+    public function scopeFilter(Builder $builder, array $attribute): Builder
+    {
+        if (isset($attribute['apps'])) {
+            $builder->whereIn('app_id', $attribute['apps']);
+        }
+        if (isset($attribute['devices'])) {
+            $builder->whereIn('device_id', $attribute['apps']);
+        }
+        if (isset($attribute['message'])) {
+            $builder->where('message', 'LIKE', $attribute['message']);
+        }
+        if (isset($attribute['user'])) {
+            $builder->where('read->userId', '=', $attribute['user']);
+        }
+        if (isset($attribute['unread'])) {
+            if ($attribute['unread']) {
+                $builder->whereNull('read->readAt');
+            } else {
+                $builder->whereNotNull('read->readAt');
+            }
+        }
+
+        return $builder;
     }
 }

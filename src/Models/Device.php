@@ -85,4 +85,17 @@ class Device extends Model implements IDevice
     {
         return DeviceFactory::new();
     }
+
+    public function scopeFilter(Builder $builder, array $attribute)
+    {
+        if (isset($attribute['owner'])) {
+            $builder->where('title', '=', $attribute['owner']);
+        }
+        if (isset($attribute['title'])) {
+            $builder->where('title', 'LIKE', '%'.$attribute['title'].'%');
+        }
+        if (isset($attribute['user'])) {
+            $builder->where('title', '=', $attribute['user']);
+        }
+    }
 }
