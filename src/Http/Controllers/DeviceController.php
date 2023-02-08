@@ -14,7 +14,7 @@ class DeviceController extends Controller
     {
     }
 
-    public function search(SearchRequest $searchRequest): DeviceResource
+    public function index(SearchRequest $searchRequest): DeviceResource
     {
         $search = $this->deviceManager->search($searchRequest->only(
             [
@@ -39,15 +39,15 @@ class DeviceController extends Controller
         return DeviceResource::make($store);
     }
 
-    public function update(int $id, UpdateRequest $updateRequest): DeviceResource
+    public function update(int $device, UpdateRequest $updateRequest): DeviceResource
     {
-        $update = $this->deviceManager->update($id, $updateRequest->validated(), userActivityLog: true);
+        $update = $this->deviceManager->update($device, $updateRequest->validated(), userActivityLog: true);
 
         return DeviceResource::make($update);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $device)
     {
-        $this->deviceManager->destroy($id, userActivityLog: true);
+        $this->deviceManager->destroy($device, userActivityLog: true);
     }
 }

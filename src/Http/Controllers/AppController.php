@@ -14,7 +14,7 @@ class AppController extends Controller
     {
     }
 
-    public function search(SearchRequest $searchRequest): AppResource
+    public function index(SearchRequest $searchRequest): AppResource
     {
         $search = $this->appManager->search($searchRequest->only(
             [
@@ -39,9 +39,9 @@ class AppController extends Controller
         return AppResource::make($store);
     }
 
-    public function update(int $id, UpdateRequest $updateRequest): AppResource
+    public function update(int $app, UpdateRequest $updateRequest): AppResource
     {
-        $update = $this->appManager->update($id, $updateRequest->validated(), userActivityLog: true);
+        $update = $this->appManager->update($app, $updateRequest->validated(), userActivityLog: true);
 
         return AppResource::make($update);
     }

@@ -17,7 +17,7 @@ class LogController extends Controller
     {
     }
 
-    public function search(SearchRequest $searchRequest)
+    public function index(SearchRequest $searchRequest)
     {
         $search = $this->logManager->search($searchRequest->only(
             [
@@ -67,9 +67,9 @@ class LogController extends Controller
         return LogResource::make($markAsUnread);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $log)
     {
-        $this->logManager->destroy($id, userActivityLog: true);
+        $this->logManager->destroy($log, userActivityLog: true);
     }
 
     public function getEnumValue(StoreRequest $storeRequest): ?LogLevel
