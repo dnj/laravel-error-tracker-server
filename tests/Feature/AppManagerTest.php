@@ -13,7 +13,7 @@ class AppManagerTest extends TestCase
     {
         App::factory(2)->create();
 
-        $response = $this->get(route('app.search', ['title' => 'test', 'owner' => 1, 'user' => 1]));
+        $response = $this->get(route('apps.index', ['title' => 'test', 'owner' => 1, 'user' => 1]));
 
         $response->assertStatus(ResponseAlias::HTTP_OK); // 200
     }
@@ -29,7 +29,7 @@ class AppManagerTest extends TestCase
             'userActivityLog' => true,
         ];
 
-        $this->postJson(route('app.store'), $data)
+        $this->postJson(route('apps.store'), $data)
             ->assertStatus(201)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
@@ -47,7 +47,7 @@ class AppManagerTest extends TestCase
             'userActivityLog' => false,
         ];
 
-        $this->putJson(route('app.update', ['id' => $app->id]), $changes)
+        $this->putJson(route('apps.update', ['app' => $app->id]), $changes)
             ->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
@@ -58,7 +58,7 @@ class AppManagerTest extends TestCase
     {
         $app = App::factory()->create();
 
-        $this->deleteJson(route('app.destroy', ['id' => $app->id]))
+        $this->deleteJson(route('apps.destroy', ['app' => $app->id]))
             ->assertStatus(ResponseAlias::HTTP_OK);
     }
 }
