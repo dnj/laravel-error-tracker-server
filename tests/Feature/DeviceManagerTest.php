@@ -13,7 +13,7 @@ class DeviceManagerTest extends TestCase
     {
         Device::factory(2)->create();
 
-        $response = $this->get(route('device.search', ['title' => 'test', 'owner' => 1, 'user' => 1]));
+        $response = $this->get(route('devices.index', ['title' => 'test', 'owner' => 1, 'user' => 1]));
 
         $response->assertStatus(ResponseAlias::HTTP_OK);
     }
@@ -27,7 +27,7 @@ class DeviceManagerTest extends TestCase
             'userActivityLog' => false,
         ];
 
-        $this->postJson(route('device.store'), $data)
+        $this->postJson(route('devices.store'), $data)
             ->assertStatus(422)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
@@ -43,7 +43,7 @@ class DeviceManagerTest extends TestCase
             'owner_id_column' => 1,
         ];
 
-        $this->postJson(route('device.store'), $data)
+        $this->postJson(route('devices.store'), $data)
             ->assertStatus(201)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
@@ -61,7 +61,7 @@ class DeviceManagerTest extends TestCase
             'userActivityLog' => false,
         ];
 
-        $this->putJson(route('device.update', ['id' => $app->id]), $changes)
+        $this->putJson(route('devices.update', ['device' => $app->id]), $changes)
             ->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
@@ -72,7 +72,7 @@ class DeviceManagerTest extends TestCase
     {
         $app = Device::factory()->create();
 
-        $this->deleteJson(route('device.destroy', ['id' => $app->id]))
+        $this->deleteJson(route('devices.destroy', ['device' => $app->id]))
             ->assertStatus(ResponseAlias::HTTP_OK);
     }
 }
