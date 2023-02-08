@@ -6,9 +6,7 @@ use dnj\ErrorTracker\Contracts\IDeviceManager;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\SearchRequest;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\StoreRequest;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\UpdateRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\Device\SearchResource;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\Device\StoreResource;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\Device\UpdateResource;
+use dnj\ErrorTracker\Laravel\Server\Http\Resources\Device\DeviceResource;
 
 class DeviceController extends Controller
 {
@@ -16,7 +14,7 @@ class DeviceController extends Controller
     {
     }
 
-    public function search(SearchRequest $searchRequest): SearchResource
+    public function search(SearchRequest $searchRequest): DeviceResource
     {
         $search = $this->deviceManager->search($searchRequest->only(
             [
@@ -26,10 +24,10 @@ class DeviceController extends Controller
             ]
         ));
 
-        return new SearchResource($search);
+        return new DeviceResource($search);
     }
 
-    public function store(StoreRequest $storeRequest): StoreResource
+    public function store(StoreRequest $storeRequest): DeviceResource
     {
         $store = $this->deviceManager->store(
             $storeRequest->input('title'),
@@ -37,14 +35,14 @@ class DeviceController extends Controller
             $storeRequest->input('owner'),
         );
 
-        return StoreResource::make($store);
+        return DeviceResource::make($store);
     }
 
-    public function update(int $id, UpdateRequest $updateRequest): UpdateResource
+    public function update(int $id, UpdateRequest $updateRequest): DeviceResource
     {
         $update = $this->deviceManager->update($id, $updateRequest->validated(), false);
 
-        return UpdateResource::make($update);
+        return DeviceResource::make($update);
     }
 
     public function destroy(int $id)

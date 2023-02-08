@@ -6,9 +6,7 @@ use dnj\ErrorTracker\Contracts\IAppManager;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\SearchRequest;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\StoreRequest;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\UpdateRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\App\SearchResource;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\App\StoreResource;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\App\UpdateResource;
+use dnj\ErrorTracker\Laravel\Server\Http\Resources\App\AppResource;
 
 class AppController extends Controller
 {
@@ -16,7 +14,7 @@ class AppController extends Controller
     {
     }
 
-    public function search(SearchRequest $searchRequest): SearchResource
+    public function search(SearchRequest $searchRequest): AppResource
     {
         $search = $this->appManager->search($searchRequest->only(
             [
@@ -26,10 +24,10 @@ class AppController extends Controller
             ]
         ));
 
-        return new SearchResource($search);
+        return new AppResource($search);
     }
 
-    public function store(StoreRequest $storeRequest): StoreResource
+    public function store(StoreRequest $storeRequest): AppResource
     {
         $store = $this->appManager->store(
             $storeRequest->input('title'),
@@ -38,14 +36,14 @@ class AppController extends Controller
             $storeRequest->input('userActivityLog'),
         );
 
-        return StoreResource::make($store);
+        return AppResource::make($store);
     }
 
-    public function update(int $id, UpdateRequest $updateRequest): UpdateResource
+    public function update(int $id, UpdateRequest $updateRequest): AppResource
     {
         $update = $this->appManager->update($id, $updateRequest->validated(), true);
 
-        return UpdateResource::make($update);
+        return AppResource::make($update);
     }
 
     public function destroy(int $id): void
