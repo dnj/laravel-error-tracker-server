@@ -33,7 +33,7 @@ class AppController extends Controller
             $storeRequest->input('title'),
             $storeRequest->input('extra'),
             $storeRequest->input('owner'),
-            $storeRequest->input('userActivityLog'),
+            userActivityLog: true
         );
 
         return AppResource::make($store);
@@ -41,13 +41,13 @@ class AppController extends Controller
 
     public function update(int $id, UpdateRequest $updateRequest): AppResource
     {
-        $update = $this->appManager->update($id, $updateRequest->validated(), true);
+        $update = $this->appManager->update($id, $updateRequest->validated(), userActivityLog: true);
 
         return AppResource::make($update);
     }
 
     public function destroy(int $id): void
     {
-        $this->appManager->destroy($id);
+        $this->appManager->destroy($id, userActivityLog: true);
     }
 }

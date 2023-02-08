@@ -20,7 +20,7 @@ class AppManager implements IAppManager
                 'title' => $title,
                 'extra' => $extra,
                 'owner' => $owner,
-                'userActivityLog' => $userActivityLog,
+                'userActivityLog' => true,
             ]
         );
 

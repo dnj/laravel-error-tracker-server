@@ -43,6 +43,7 @@ class LogController extends Controller
             $storeRequest->input('message'),
             $storeRequest->input('data'),
             $storeRequest->input('read'),
+            userActivityLog: true
         );
 
         return LogResource::make($log);
@@ -53,21 +54,22 @@ class LogController extends Controller
         $markAsRead = $this->logManager->markAsRead(
             $log,
             $markAsReadRequest->get('userId'),
-            Carbon::make($markAsReadRequest->get('readAt')));
+            Carbon::make($markAsReadRequest->get('readAt')),
+            userActivityLog: true);
 
         return LogResource::make($markAsRead);
     }
 
     public function markAsUnRead(Log $log): LogResource
     {
-        $markAsUnread = $this->logManager->markAsUnread($log);
+        $markAsUnread = $this->logManager->markAsUnread($log, userActivityLog: true);
 
         return LogResource::make($markAsUnread);
     }
 
     public function destroy(int $id)
     {
-        $this->logManager->destroy($id);
+        $this->logManager->destroy($id, userActivityLog: true);
     }
 
     public function getEnumValue(StoreRequest $storeRequest): ?LogLevel

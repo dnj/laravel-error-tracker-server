@@ -33,6 +33,7 @@ class DeviceController extends Controller
             $storeRequest->input('title'),
             $storeRequest->input('extra'),
             $storeRequest->input('owner'),
+            userActivityLog: true,
         );
 
         return DeviceResource::make($store);
@@ -40,13 +41,13 @@ class DeviceController extends Controller
 
     public function update(int $id, UpdateRequest $updateRequest): DeviceResource
     {
-        $update = $this->deviceManager->update($id, $updateRequest->validated(), false);
+        $update = $this->deviceManager->update($id, $updateRequest->validated(), userActivityLog: true);
 
         return DeviceResource::make($update);
     }
 
     public function destroy(int $id)
     {
-        $this->deviceManager->destroy($id);
+        $this->deviceManager->destroy($id, userActivityLog: true);
     }
 }
