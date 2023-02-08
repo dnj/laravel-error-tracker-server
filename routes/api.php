@@ -7,25 +7,14 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['api', SubstituteBindings::class])->group(function () {
-    Route::group(['prefix' => 'app', 'as' => 'app.'], function () {
-        Route::get('/search', [AppController::class, 'search'])->name('search');
-        Route::post('/store', [AppController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [AppController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [AppController::class, 'destroy'])->name('destroy');
-    });
+    Route::apiResources([
+        'apps' => AppController::class,
+        'devices' => DeviceController::class,
+        'logs' => LogController::class,
+    ]);
 
-    Route::group(['prefix' => 'device', 'as' => 'device.'], function () {
-        Route::get('/search', [DeviceController::class, 'search'])->name('search');
-        Route::post('/store', [DeviceController::class, 'store'])->name('store');
-        Route::put('/update/{id}', [DeviceController::class, 'update'])->name('update');
-        Route::delete('/destroy/{id}', [DeviceController::class, 'destroy'])->name('destroy');
-    });
-
-    Route::group(['prefix' => 'log', 'as' => 'log.'], function () {
-        Route::get('/search', [LogController::class, 'search'])->name('search');
-        Route::post('/store', [LogController::class, 'store'])->name('store');
+    Route::group(['prefix' => 'logs', 'as' => 'logs.'], function () {
         Route::put('/markAsRead/{log}', [LogController::class, 'markAsRead'])->name('mark_as_read');
         Route::put('/markAsUnRead/{log}', [LogController::class, 'markAsUnRead'])->name('mark_as_unread');
-        Route::delete('/destroy/{id}', [LogController::class, 'destroy'])->name('destroy');
     });
 });
