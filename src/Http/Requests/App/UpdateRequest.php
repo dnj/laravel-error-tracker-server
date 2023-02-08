@@ -15,7 +15,6 @@ class UpdateRequest extends FormRequest
             'title' => ['string'],
             'extra' => ['array'],
             'owner' => ['integer'],
-            'userActivityLog' => ['nullable', 'boolean'],
         ];
     }
 }

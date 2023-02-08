@@ -12,7 +12,6 @@ class UpdateRequest extends FormRequest
             'title' => ['string', 'required'],
             'extra' => ['array', 'nullable'],
             'owner' => ['integer', 'nullable'],
-            'user_activity_log' => 'nullable|boolean',
         ];
     }
 }

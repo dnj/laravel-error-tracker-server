@@ -15,7 +15,6 @@ class StoreRequest extends FormRequest
             'title' => ['required'],
             'extra' => ['nullable', 'array'],
             'owner' => ['nullable', 'integer'],
-            'userActivityLog' => ['nullable', 'boolean'],
         ];
     }
 }
