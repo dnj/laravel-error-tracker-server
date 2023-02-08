@@ -4,7 +4,7 @@ namespace dnj\ErrorTracker\Laravel\Server\Models;
 
 use dnj\ErrorTracker\Contracts\IApp;
 use dnj\ErrorTracker\Database\Factories\AppFactory;
-use dnj\ErrorTracker\Laravel\Server\Kernel\DatabaseFilter\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class App extends Model implements IApp
 {
-    use Filterable;
     use HasFactory;
 
     protected $fillable = ['title'];
