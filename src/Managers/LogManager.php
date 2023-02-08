@@ -22,10 +22,10 @@ class LogManager implements ILogManager
 
         $model->setRead($read);
         $model->setAppId($app);
-        $model->setLevel($level->name);
+        $model->setLevel($level);
         $model->setMessage($message);
         $model->setDeviceId($device);
-        $model->setData($device);
+        $model->setData($data);
 
         $model->save();
 
