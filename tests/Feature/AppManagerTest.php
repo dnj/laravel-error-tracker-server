@@ -20,31 +20,48 @@ class AppManagerTest extends TestCase
 
     public function testUserCanStore(): void
     {
-        $app = App::factory()->create();
-
         $data = [
             'title' => 'Test App',
             'extra' => ['test_key' => 'test_value'],
             'owner' => 1,
-            'userActivityLog' => true,
         ];
 
         $this->postJson(route('apps.store'), $data)
-            ->assertStatus(201)
+            ->assertStatus(ResponseAlias::HTTP_CREATED) // 201
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
             });
+
+        $data['extra'] = json_encode($data['extra']);
+        $this->assertDatabaseHas('apps', $data);
+        $this->assertDatabaseCount('apps', 1);
     }
 
-    public function testUpdateApp(): void
+    public function testUserCanNotStore(): void
+    {
+        $data = [
+            'title' => '',
+            'extra' => [''],
+            'owner' => '',
+        ];
+
+        $this->postJson(route('apps.store'), $data)
+            ->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) // 422
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+
+        $this->assertDatabaseCount('apps', 0);
+    }
+
+    public function testCanUpdateApp(): void
     {
         $app = App::factory()->create();
 
         $changes = [
             'title' => 'Test App edited',
-            'extra' => ['test_key edited' => 'test_value edited'],
+            'extra' => ['test_key' => 'test_value'],
             'owner' => 3,
-            'userActivityLog' => false,
         ];
 
         $this->putJson(route('apps.update', ['app' => $app->id]), $changes)
@@ -52,6 +69,23 @@ class AppManagerTest extends TestCase
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
             });
+
+        $changes['extra'] = json_encode($changes['extra']);
+        $this->assertDatabaseHas('apps', $changes);
+        $this->assertDatabaseCount('apps', 1);
+    }
+
+    public function testCanNotUpdateApp(): void
+    {
+        $changes = [];
+
+        $this->putJson(route('apps.update', ['app' => 100]), $changes)
+            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+
+        $this->assertDatabaseCount('apps', 0);
     }
 
     public function testDestroy(): void
@@ -59,6 +93,14 @@ class AppManagerTest extends TestCase
         $app = App::factory()->create();
 
         $this->deleteJson(route('apps.destroy', ['app' => $app->id]))
-            ->assertStatus(ResponseAlias::HTTP_OK);
+            ->assertStatus(ResponseAlias::HTTP_OK); // 200
+    }
+
+    public function testCanNotDestroy(): void
+    {
+        $app = App::factory()->create();
+
+        $this->deleteJson(route('apps.destroy', ['app' => 100]))
+            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND); // 404
     }
 }

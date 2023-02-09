@@ -15,15 +15,11 @@ class AppManager implements IAppManager
 
     public function store(string $title, ?array $extra = null, ?int $owner = null, bool $userActivityLog = false): IApp
     {
-        $app = new App(
-            [
-                'title' => $title,
-                'extra' => $extra,
-                'owner' => $owner,
-                'userActivityLog' => true,
-            ]
-        );
+        $app = new App();
 
+        $app->setTitle($title);
+        $app->setOwner($owner);
+        $app->setExtra($extra);
         $app->save();
 
         return $app;
@@ -32,7 +28,9 @@ class AppManager implements IAppManager
     public function update(int|IApp $app, array $changes, bool $userActivityLog = false): IApp
     {
         $model = App::query()->findOrFail($app);
-        $model->fill($changes);
+        $model->setTitle($changes['title']);
+        $model->setOwner($changes['owner']);
+        $model->setExtra($changes['extra']);
         $model->save();
 
         return $model;
