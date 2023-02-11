@@ -32,7 +32,7 @@ class AppManagerTest extends TestCase
                 $json->etc();
             });
 
-        $data['extra'] = json_encode($data['extra']);
+        $data = $this->prepareForAssert($data);
         $this->assertDatabaseHas('apps', $data);
         $this->assertDatabaseCount('apps', 1);
     }
@@ -70,7 +70,7 @@ class AppManagerTest extends TestCase
                 $json->etc();
             });
 
-        $changes['extra'] = json_encode($changes['extra']);
+        $changes = $this->prepareForAssert($changes);
         $this->assertDatabaseHas('apps', $changes);
         $this->assertDatabaseCount('apps', 1);
     }
@@ -102,5 +102,14 @@ class AppManagerTest extends TestCase
 
         $this->deleteJson(route('apps.destroy', ['app' => 100]))
             ->assertStatus(ResponseAlias::HTTP_NOT_FOUND); // 404
+    }
+
+    public function prepareForAssert(array $changes): array
+    {
+        $changes['extra'] = json_encode($changes['extra']);
+        $changes['owner_id'] = $changes['owner'];
+        unset($changes['owner']);
+
+        return $changes;
     }
 }

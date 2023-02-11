@@ -15,14 +15,12 @@ class DeviceManager implements IDeviceManager
 
     public function store(?string $title = null, ?array $extra = null, ?int $owner = null, bool $userActivityLog = false): IDevice
     {
-        $device = new Device(
-            [
-                'title' => $title,
-                'extra' => $extra,
-                'owner' => $owner,
-            ]
-        );
+        $device = new Device();
 
+        $device->setTitle($title);
+        $device->setOwnerId($owner);
+        $device->setExtra($extra);
+        $device->setOwnerIdColumn('owner_id');
         $device->save();
 
         return $device;
@@ -30,8 +28,11 @@ class DeviceManager implements IDeviceManager
 
     public function update(IDevice|int $device, array $changes, bool $userActivityLog = false): IDevice
     {
+        /** @var Device $model */
         $model = Device::query()->findOrFail($device);
-        $model->fill($changes);
+        $model->setTitle($changes['title']);
+        $model->setOwnerId($changes['owner']);
+        $model->setExtra($changes['extra']);
         $model->save();
 
         return $model;

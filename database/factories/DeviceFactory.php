@@ -14,7 +14,8 @@ class DeviceFactory extends Factory
         return [
             'title' => fake()->word,
             'extra' => serialize(fake()->words(3)),
-            'owner' => rand(1, 5),
+            'owner_id' => rand(1, 5),
+            'owner_id_column' => 'owner_id',
             'created_at' => fake()->dateTime,
             'updated_at' => fake()->dateTime,
         ];

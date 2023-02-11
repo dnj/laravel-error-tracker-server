@@ -14,7 +14,8 @@ return new class() extends Migration {
             $table->id();
             $table->string('title');
             $table->json('extra')->nullable();
-            $table->integer('owner')->nullable();
+            $table->integer('owner_id')->nullable();
+            $table->integer('owner_id_column')->nullable();
             $table->timestamps();
         });
     }

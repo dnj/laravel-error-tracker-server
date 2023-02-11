@@ -18,7 +18,8 @@ class AppManager implements IAppManager
         $app = new App();
 
         $app->setTitle($title);
-        $app->setOwner($owner);
+        $app->setOwnerId($owner);
+        $app->setOwnerIdColumn('owner_id');
         $app->setExtra($extra);
         $app->save();
 
@@ -27,9 +28,10 @@ class AppManager implements IAppManager
 
     public function update(int|IApp $app, array $changes, bool $userActivityLog = false): IApp
     {
+        /** @var App $model */
         $model = App::query()->findOrFail($app);
         $model->setTitle($changes['title']);
-        $model->setOwner($changes['owner']);
+        $model->setOwnerId($changes['owner']);
         $model->setExtra($changes['extra']);
         $model->save();
 

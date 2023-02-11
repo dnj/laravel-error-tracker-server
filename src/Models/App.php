@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int        id
  * @property string     title
  * @property array|null extra
- * @property int|null   owner
+ * @property int|null   owner_id
  * @property string     owner_id_column
  * @property \DateTime  created_at
  * @property \DateTime  updated_at
@@ -48,14 +48,16 @@ class App extends Model implements IApp
         $this->extra = json_encode($extra);
     }
 
-    public function getOwner(): ?int
+    public function getOwnerId(): ?int
     {
-        return $this->owner;
+        return $this->owner_id;
     }
 
-    public function setOwner(?int $owner): void
+    public function setOwnerId(?int $owner): App
     {
-        $this->owner = $owner;
+        $this->owner_id = $owner;
+
+        return $this;
     }
 
     public function getOwnerIdColumn(): string
@@ -76,11 +78,6 @@ class App extends Model implements IApp
     public function getUpdatedAt(): \DateTime
     {
         return $this->updated_at;
-    }
-
-    public function getOwnerId(): ?int
-    {
-        return $this->getOwnerIdColumn();
     }
 
     protected static function newFactory(): AppFactory

@@ -18,7 +18,7 @@ class LogManagerTest extends TestCase
         $app = App::factory()->create();
         $device = Device::factory()->create();
 
-        $response = $this->get(route('log.search',
+        $response = $this->get(route('logs.index',
             [
                 'apps' => [$app->id],
                 'devices' => [$device->id],
@@ -49,11 +49,17 @@ class LogManagerTest extends TestCase
             'read' => ['userId' => 1, 'readAt' => Carbon::now()],
         ];
 
-        $this->postJson(route('log.store'), $data)
+        $this->postJson(route('logs.store'), $data)
             ->assertStatus(ResponseAlias::HTTP_CREATED)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
             });
+
+        unset($data['app']);
+
+        $data = $this->makeDataForAssert($data);
+
+        $this->assertDatabaseHas('logs', $data);
     }
 
     public function testMarkAsRead()
@@ -63,11 +69,29 @@ class LogManagerTest extends TestCase
         $data = [
             'userId' => 1,
             'readAt' => Carbon::now(),
-            'userActivityLog' => false,
         ];
 
-        $this->putJson(route('log.mark_as_read', ['log' => $log->id]), $data)
+        $this->putJson(route('logs.mark_as_read', ['log' => $log->id]), $data)
             ->assertStatus(ResponseAlias::HTTP_OK)
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+
+        $this->assertDatabaseHas('logs', [
+            'read->userId' => $data['userId'],
+            'read->readAt' => (string) $data['readAt'],
+        ]);
+    }
+
+    public function testCanNotMarkAsRead()
+    {
+        $data = [
+            'userId' => 1,
+            'readAt' => Carbon::now(),
+        ];
+
+        $this->putJson(route('logs.mark_as_read', ['log' => 100]), $data)
+            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
             });
@@ -77,24 +101,51 @@ class LogManagerTest extends TestCase
     {
         $log = Log::factory()->create();
 
-        $data = [
-            'userId' => 1,
-            'readAt' => Carbon::now(),
-            'userActivityLog' => false,
-        ];
-
-        $this->putJson(route('log.mark_as_unread', ['log' => $log->id]), $data)
+        $this->putJson(route('logs.mark_as_unread', ['log' => $log->id]))
             ->assertStatus(ResponseAlias::HTTP_OK)
             ->assertJson(function (AssertableJson $json) {
                 $json->etc();
             });
+
+        $this->assertDatabaseHas('logs', [
+            'read->userId' => null,
+            'read->readAt' => null,
+        ]);
+    }
+
+    public function testCanNotMarkAsUnRead()
+    {
+        $this->putJson(route('logs.mark_as_unread', ['log' => 100]))
+            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
+            ->assertJson(function (AssertableJson $json) {
+                $json->etc();
+            });
+
+        $this->assertDatabaseCount('logs', 0);
     }
 
     public function testCanDestroy()
     {
         $app = Log::factory()->create();
 
-        $this->deleteJson(route('log.destroy', ['id' => $app->id]))
+        $this->deleteJson(route('logs.destroy', ['log' => $app->id]))
             ->assertStatus(ResponseAlias::HTTP_OK);
+    }
+
+    public function testCanNotDestroy()
+    {
+        $this->deleteJson(route('logs.destroy', ['log' => 100]))
+            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND);
+    }
+
+
+    private function makeDataForAssert(array $data): array
+    {
+        $data['data'] = json_encode($data['data']);
+        $data['read'] = json_encode($data['read']);
+        $data['device_id'] = $data['device'];
+        unset($data['device']);
+
+        return $data;
     }
 }

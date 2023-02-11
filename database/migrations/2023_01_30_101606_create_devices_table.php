@@ -14,7 +14,8 @@ return new class() extends Migration {
             $table->bigIncrements('id');
             $table->string('title');
             $table->json('extra')->nullable();
-            $table->unsignedBigInteger('owner')->nullable();
+            $table->unsignedBigInteger('owner_id')->nullable();
+            $table->unsignedBigInteger('owner_id_column');
             $table->boolean('user_activity_log')->default(false);
             $table->timestamps();
         });
