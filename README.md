@@ -15,12 +15,12 @@ This package is specifically built for **laravel** error tracking.
     * Log Management
 * Latest versions of PHP and PHPUnit and PHPCsFixer
 * Best practices applied:
-    * [`README.md`][link-readme] (badges included)
-    * [`LICENSE`][link-license]
-    * [`composer.json`][link-composer-json]
-    * [`phpunit.xml`][link-phpunit]
-    * [`.gitignore`][link-gitignore]
-    * [`.php-cs-fixer.php`][link-phpcsfixer]
+    * [`README.md`](https://github.com/dnj/laravel-error-tracker-server/blob/master/README.md) (badges included)
+    * [`LICENSE`](https://github.com/dnj/laravel-error-tracker-server/blob/master/LICENSE)
+    * [`composer.json`](https://github.com/dnj/laravel-error-tracker-server/blob/master/composer.json)
+    * [`phpunit.xml`](https://github.com/dnj/laravel-error-tracker-server/blob/master/phpunit.xml)
+    * [`.gitignore`](https://github.com/dnj/laravel-error-tracker-server/blob/master/.gitignore)
+    * [`.php-cs-fixer.php`](https://github.com/dnj/laravel-error-tracker-server/blob/master/.php-cs-fixer.php)
 
 ## Installation
 
