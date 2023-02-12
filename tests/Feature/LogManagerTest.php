@@ -45,7 +45,7 @@ class LogManagerTest extends TestCase
             'device' => $device->id,
             'level' => LogLevel::INFO->name,
             'message' => 'message test',
-            'data' => ['test_key edited' => 'test_value edited'],
+            'data' => ['test_key' => ['test' => 1]],
             'read' => ['userId' => 1, 'readAt' => Carbon::now()],
         ];
 
