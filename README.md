@@ -1,9 +1,11 @@
 # Laravel Error Tracker 📥
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
+[![Latest Version on Packagist [link-packagist](https://img.shields.io/packagist/dependency-v/dnj/dnj/laravel-error-tracker-server)
 [![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]][link-license]
 [![Testing status][ico-workflow-test]][link-workflow-test]
+
+https://img.shields.io/appveyor/build/dnj/https://github.com/dnj/laravel-error-tracker-server?style=flat-square
 
 ## Introduction
 
