@@ -15,6 +15,7 @@ class StoreRequest extends FormRequest
             'level' => ['required', 'in:'.implode(',', getEnumValues(LogLevel::cases()))],
             'message' => ['string', 'required'],
             'data' => ['array', 'nullable'],
+            'data.*' => ['array', 'nullable'],
             'data.readAt' => ['nullable', 'date'],
             'data.userId' => ['nullable', 'int'],
             'read' => ['array', 'nullable'],
