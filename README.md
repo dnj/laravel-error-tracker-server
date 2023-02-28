@@ -64,6 +64,9 @@ Example :
 
 ```php
 use dnj\ErrorTracker\Contracts\IAppManager;
+use dnj\ErrorTracker\Contracts\IDeviceManager;
+use dnj\ErrorTracker\Contracts\ILogManager;
+use dnj\ErrorTracker\Contracts\LogLevel;
 
 $appManager = app(IAppManager::class);
 
@@ -72,7 +75,27 @@ $app = $appManager->store(
   owner: 1,
   meta: ['key' => 'value']),
   userActivityLog: false,
-); 
+);
+
+$deviceManager = app(IDeviceManager::class);
+
+$device = $deviceManager->store(
+  title: 'Nokia mobile',
+  owner: 1,
+  meta: ['serialNo' => 44514526985]),
+  userActivityLog: false,
+);
+
+
+$logManager = app(ILogManager::class);
+
+$log = $logManager->store(
+  app: $app,
+  device: $device,
+  level: LogLevel::INFO,
+  message: 'App just installed',
+  data: ['version' => "1.0.0"]
+);
 ```
 
 ## Working With Application:
