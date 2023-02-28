@@ -1,151 +1,109 @@
 <?php
 
-namespace dnj\ErrorTracker\Laravel\Server\Tests\Feature;
+namespace dnj\ErrorTracker\Laravel\Server\Tests\Fature;
 
-use Carbon\Carbon;
+use dnj\AAA\Models\User;
 use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Laravel\Server\Models\App;
 use dnj\ErrorTracker\Laravel\Server\Models\Device;
 use dnj\ErrorTracker\Laravel\Server\Models\Log;
 use dnj\ErrorTracker\Laravel\Server\Tests\TestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class LogManagerTest extends TestCase
 {
-    public function testLogSearch()
+    public function testSearch()
     {
         $app = App::factory()->create();
         $device = Device::factory()->create();
+        $log1 = Log::factory()->withLevel(LogLevel::ERROR)->withApp($app)->create();
+        $log2 = Log::factory()->withLevel(LogLevel::INFO)->withDevice($device)->read()->create();
+        $log3 = Log::factory()->withLevel(LogLevel::DEBUG)->withMessage("non critical error")->create();
 
-        $response = $this->get(route('logs.index',
-            [
-                'apps' => [$app->id],
-                'devices' => [$device->id],
-                'level' => LogLevel::INFO->name,
-                'message' => 'test',
-                'unread' => true,
-                'user' => 1,
-            ]
+        $logs = $this->getLogManager()->search(array(
+            'apps' => [$app->id],
         ));
+        $this->assertTrue($logs->contains($log1));
+        $this->assertFalse($logs->contains($log2));
+        $this->assertFalse($logs->contains($log3));
 
-        $response->assertStatus(ResponseAlias::HTTP_OK)
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
+        $logs = $this->getLogManager()->search(array(
+            'devices' => [$device->id],
+        ));
+        $this->assertFalse($logs->contains($log1));
+        $this->assertTrue($logs->contains($log2));
+        $this->assertFalse($logs->contains($log3));
+
+        $logs = $this->getLogManager()->search(array(
+            'levels' => [LogLevel::DEBUG, LogLevel::ERROR],
+        ));
+        $this->assertTrue($logs->contains($log1));
+        $this->assertFalse($logs->contains($log2));
+        $this->assertTrue($logs->contains($log3));
+
+        $logs = $this->getLogManager()->search(array(
+            'message' => 'critical'
+        ));
+        $this->assertFalse($logs->contains($log1));
+        $this->assertFalse($logs->contains($log2));
+        $this->assertTrue($logs->contains($log3));
+
+        $logs = $this->getLogManager()->search(array(
+            'unread' => false
+        ));
+        $this->assertFalse($logs->contains($log1));
+        $this->assertTrue($logs->contains($log2));
+        $this->assertFalse($logs->contains($log3));
+    
+        $logs = $this->getLogManager()->search(array(
+            'unread' => true
+        ));
+        $this->assertTrue($logs->contains($log1));
+        $this->assertFalse($logs->contains($log2));
+        $this->assertTrue($logs->contains($log3));
     }
 
-    public function testCanStore(): void
+    public function testStore(): void
     {
         $app = App::factory()->create();
         $device = Device::factory()->create();
 
         $data = [
-            'app' => $app->id,
-            'device' => $device->id,
-            'level' => LogLevel::INFO->name,
+            'app' => $app,
+            'device' => $device,
+            'level' => LogLevel::INFO,
             'message' => 'message test',
             'data' => ['test_key' => ['test' => 1]],
-            'read' => ['userId' => 1, 'readAt' => Carbon::now()],
+            'read' => ['user' => User::factory()->create()],
         ];
-
-        $this->postJson(route('logs.store'), $data)
-            ->assertStatus(ResponseAlias::HTTP_CREATED)
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        unset($data['app']);
-
-        $data = $this->makeDataForAssert($data);
-
-        $this->assertDatabaseHas('logs', $data);
+        $log = $this->getLogManager()->store($data['app'], $data['device'], $data['level'], $data['message'], $data['data'], $data['read']);
+        $this->assertSame($app->id, $log->getAppId());
+        $this->assertSame($device->id, $log->getDeviceId());
+        $this->assertSame($data['level'], $log->getLevel());
+        $this->assertSame($data['message'], $log->getMessage());
+        $this->assertSame($data['data'], $log->getData());
+        $this->assertSame($data['read']['user']->id, $log->getReaderUserId());
     }
 
-    public function testMarkAsRead()
+    public function testMarkAsRead(): void
     {
         $log = Log::factory()->create();
-
-        $data = [
-            'userId' => 1,
-            'readAt' => Carbon::now(),
-        ];
-
-        $this->putJson(route('logs.mark_as_read', ['log' => $log->id]), $data)
-            ->assertStatus(ResponseAlias::HTTP_OK)
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $this->assertDatabaseHas('logs', [
-            'read->userId' => $data['userId'],
-            'read->readAt' => (string) $data['readAt'],
-        ]);
+        $reader = User::factory()->create();
+        $log = $this->getLogManager()->markAsRead($log, $reader);
+        $this->assertSame($reader->id, $log->getReaderUserId());
     }
 
-    public function testCanNotMarkAsRead()
+    public function testMarkAsUnread(): void
     {
-        $data = [
-            'userId' => 1,
-            'readAt' => Carbon::now(),
-        ];
-
-        $this->putJson(route('logs.mark_as_read', ['log' => 100]), $data)
-            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
+        $log = Log::factory()->read()->create();
+        $log = $this->getLogManager()->markAsUnread($log, true);
+        $this->assertNull($log->getReaderUserId());
     }
 
-    public function testMarkAsUnRead()
+
+    public function testDestroy(): void
     {
         $log = Log::factory()->create();
-
-        $this->putJson(route('logs.mark_as_unread', ['log' => $log->id]))
-            ->assertStatus(ResponseAlias::HTTP_OK)
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $this->assertDatabaseHas('logs', [
-            'read->userId' => null,
-            'read->readAt' => null,
-        ]);
-    }
-
-    public function testCanNotMarkAsUnRead()
-    {
-        $this->putJson(route('logs.mark_as_unread', ['log' => 100]))
-            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $this->assertDatabaseCount('logs', 0);
-    }
-
-    public function testCanDestroy()
-    {
-        $app = Log::factory()->create();
-
-        $this->deleteJson(route('logs.destroy', ['log' => $app->id]))
-            ->assertStatus(ResponseAlias::HTTP_OK);
-    }
-
-    public function testCanNotDestroy()
-    {
-        $this->deleteJson(route('logs.destroy', ['log' => 100]))
-            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND);
-    }
-
-
-    private function makeDataForAssert(array $data): array
-    {
-        $data['data'] = json_encode($data['data']);
-        $data['read'] = json_encode($data['read']);
-        $data['device_id'] = $data['device'];
-        unset($data['device']);
-
-        return $data;
+        $this->getLogManager()->destroy($log, true);
+        $this->assertModelMissing($log);
     }
 }

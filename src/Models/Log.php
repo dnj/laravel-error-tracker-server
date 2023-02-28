@@ -3,115 +3,104 @@
 namespace dnj\ErrorTracker\Laravel\Server\Models;
 
 use Carbon\Carbon;
+use dnj\AAA\Models\User;
+use dnj\ErrorTracker\Contracts\IApp;
+use dnj\ErrorTracker\Contracts\IDevice;
 use dnj\ErrorTracker\Contracts\ILog;
 use dnj\ErrorTracker\Contracts\LogLevel;
-use dnj\ErrorTracker\Database\Factories\LogFactory;
+use dnj\ErrorTracker\Laravel\Database\Factories\LogFactory;
+use dnj\UserLogger\Concerns\Loggable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int id
- * @property int app_id
- * @property int device_id
- * @property string|null read
- * @property LogLevel level
- * @property string message
- * @property string|null data
- * @property \DateTime created_at
- * @property \DateTime updated_at
+ * @property int                      $id
+ * @property Carbon                   $created_at
+ * @property int                      $app_id
+ * @property int                      $device_id
+ * @property int|null                 $reader_id
+ * @property User|null                $reader
+ * @property Carbon|null              $read_at
+ * @property LogLevel                 $level
+ * @property string                   $message
+ * @property array<string,mixed>|null $data
  */
 class Log extends Model implements ILog
 {
     use HasFactory;
+    use Loggable;
+
+    public const UPDATED_AT = null;
+
+    public static function newFactory(): LogFactory
+    {
+        return LogFactory::new();
+    }
+
+    protected $table = 'error_tracker_logs';
+    protected $fillable = [
+        'created_at',
+        'app_id',
+        'device_id',
+        'reader_id',
+        'read_at',
+        'level',
+        'message',
+        'data',
+    ];
 
     protected $casts = [
+        'read_at' => 'datetime',
         'level' => LogLevel::class,
+        'data' => 'array',
     ];
+
+    public function reader(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function scopeFilter(Builder $builder, array $filters)
+    {
+        if (isset($filters['apps'])) {
+            $filters['apps'] = array_map(fn ($v) => $v instanceof IApp ? $v->getId() : $v, $filters['apps']);
+            $builder->whereIn("app_id", $filters['apps']);
+        }
+        if (isset($filters['devices'])) {
+            $filters['devices'] = array_map(fn ($v) => $v instanceof IDevice ? $v->getId() : $v, $filters['devices']);
+            $builder->whereIn("device_id", $filters['devices']);
+        }
+        if (isset($filters['levels'])) {
+            $filters['levels'] = array_map(fn ($v) => $v->name, $filters['levels']);
+            $builder->whereIn("level", $filters['levels']);
+        }
+        if (isset($filters['message'])) {
+            $builder->where("message", "LIKE", "%" . $filters['message'] . "%");
+        }
+        if (isset($filters['unread'])) {
+            if ($filters['unread']) {
+                $builder->whereNull("read_at");
+            } else {
+                $builder->whereNotNull("read_at");
+            }
+        }
+        
+        if (isset($filters['user'])) {
+            // TODO
+        }
+    }
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getRead(): string
-    {
-        return $this->read;
-    }
-
-    public function setRead(array|null $read): Log
-    {
-        $this->read = json_encode($read);
-
-        return $this;
-    }
-
-    public function getDeviceId(): int
-    {
-        return $this->device_id;
-    }
-
-    public function setDeviceId(int $device_id): Log
-    {
-        $this->device_id = $device_id;
-
-        return $this;
-    }
-
-    public function getReaderUserId(): ?int
-    {
-        return optional(json_decode($this->read))->userId;
-    }
-
-    public function getReadAt(): ?\DateTime
-    {
-        $readAt = optional(json_decode($this->read))->readAt;
-
-        return $readAt ? Carbon::make($readAt) : $readAt;
-    }
-
-    public function getLevel(): LogLevel
-    {
-        return $this->level;
-    }
-
-    public function setLevel(LogLevel $level): void
-    {
-        $this->level = $level;
-    }
-
-    public function getMessage(): string
-    {
-        return $this->message;
-    }
-
-    public function setMessage(string $message): Log
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
-    public function getData(): ?array
-    {
-        return json_decode($this->data);
-    }
-
-    public function setData(?array $data): Log
-    {
-        $this->data = json_encode($data);
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): Carbon
     {
         return $this->created_at;
-    }
-
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updated_at;
     }
 
     public function getAppId(): int
@@ -119,40 +108,33 @@ class Log extends Model implements ILog
         return $this->app_id;
     }
 
-    public function setAppId(int $app_id): Log
+    public function getDeviceId(): int
     {
-        $this->app_id = $app_id;
-
-        return $this;
+        return $this->device_id;
     }
 
-    protected static function newFactory(): LogFactory
+    public function getReaderUserId(): ?int
     {
-        return LogFactory::new();
+        return $this->reader_id;
     }
 
-    public function scopeFilter(Builder $builder, array $attribute): Builder
+    public function getReadAt(): ?Carbon
     {
-        if (isset($attribute['apps'])) {
-            $builder->whereIn('app_id', $attribute['apps']);
-        }
-        if (isset($attribute['devices'])) {
-            $builder->whereIn('device_id', $attribute['apps']);
-        }
-        if (isset($attribute['message'])) {
-            $builder->where('message', 'LIKE', $attribute['message']);
-        }
-        if (isset($attribute['user'])) {
-            $builder->where('read->userId', '=', $attribute['user']);
-        }
-        if (isset($attribute['unread'])) {
-            if ($attribute['unread']) {
-                $builder->whereNull('read->readAt');
-            } else {
-                $builder->whereNotNull('read->readAt');
-            }
-        }
+        return $this->read_at;
+    }
 
-        return $builder;
+    public function getLevel(): LogLevel
+    {
+        return $this->level;
+    }
+
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    public function getData(): ?array
+    {
+        return $this->data;
     }
 }

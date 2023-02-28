@@ -2,107 +2,106 @@
 
 namespace dnj\ErrorTracker\Laravel\Server\Models;
 
+use Carbon\Carbon;
+use dnj\AAA\Models\User;
 use dnj\ErrorTracker\Contracts\IDevice;
-use dnj\ErrorTracker\Database\Factories\DeviceFactory;
+use dnj\ErrorTracker\Laravel\Database\Factories\DeviceFactory;
+use dnj\UserLogger\Concerns\Loggable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int         id
- * @property string|null title
- * @property array|null extra
- * @property int|null    owner_id
- * @property string      owner_id_column
- * @property \DateTime   created_at
- * @property \DateTime   updated_at
+ * @property int                      $id
+ * @property string                   $title
+ * @property int                      $owner_id
+ * @property User                     $user
+ * @property array<string,mixed>|null $meta
+ * @property Carbon                   $created_at
+ * @property Carbon                   $updated_at
  */
 class Device extends Model implements IDevice
 {
     use HasFactory;
+    use Loggable;
 
-    protected $fillable = ['title'];
+    public static function newFactory(): DeviceFactory
+    {
+        return DeviceFactory::new();
+    }
+
+    protected $table = 'error_tracker_devices';
+    protected $fillable = [
+        'title',
+        'owner_id',
+        'meta',
+        'created_at',
+        'updated_at',
+    ];
+
+    protected $casts = [
+        'meta' => 'array',
+    ];
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function scopeFilter(Builder $builder, array $filters)
+    {
+        if (array_key_exists("owner", $filters)) {
+            if ($filters === null) {
+                $builder->whereNull("owner_id");
+            } else {
+                if ($filters['owner'] instanceof Authenticatable) {
+                    $filters['owner'] = $filters['owner']->getAuthIdentifier();
+                }
+                $builder->where('owner_id', $filters['owner']);
+            }
+        }
+        if (isset($filters['title'])) {
+            $builder->where('title', 'LIKE', '%' . $filters['title'] . '%');
+        }
+        if (isset($filters['user'])) {
+            // TODO
+        }
+    }
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function setTitle(?string $title): void
+    public function getMeta(): ?array
     {
-        $this->title = $title;
+        return $this->meta;
     }
 
-    /**
-     * @return array|array|null
-     */
-    public function getExtra(): ?array
-    {
-        return $this->extra;
-    }
-
-    public function setExtra(?array $extra): Device
-    {
-        $this->extra = json_encode($extra);
-
-        return $this;
-    }
-
-    public function getOwnerId(): ?int
-    {
-        return $this->owner_id;
-    }
-
-    public function setOwnerId(?int $owner_id): Device
-    {
-        $this->owner_id = $owner_id;
-
-        return $this;
-    }
-
-    public function getOwnerIdColumn(): string
-    {
-        return $this->owner_id_column;
-    }
-
-    public function setOwnerIdColumn(string $owner_id_column): Device
-    {
-        $this->owner_id_column = $owner_id_column;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): Carbon
     {
         return $this->created_at;
     }
 
-
-    protected static function newFactory(): DeviceFactory
-    {
-        return DeviceFactory::new();
-    }
-
-    public function scopeFilter(Builder $builder, array $attribute)
-    {
-        if (isset($attribute['owner'])) {
-            $builder->where('owner_id', '=', $attribute['owner']);
-        }
-        if (isset($attribute['title'])) {
-            $builder->where('title', 'LIKE', '%'.$attribute['title'].'%');
-        }
-        if (isset($attribute['user'])) {
-            $builder->where('user', '=', $attribute['user']);
-        }
-    }
-
-    public function getUpdatedAt(): \DateTimeInterface
+    public function getUpdatedAt(): Carbon
     {
         return $this->updated_at;
+    }
+
+    public function getOwnerUserId(): int
+    {
+        return $this->owner_id;
+    }
+
+    public function getOwnerUserColumn(): string
+    {
+        return 'owner_id';
     }
 }

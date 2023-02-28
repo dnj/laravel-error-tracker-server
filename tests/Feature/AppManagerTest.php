@@ -2,114 +2,84 @@
 
 namespace dnj\ErrorTracker\Laravel\Server\Tests\Feature;
 
+use dnj\AAA\Models\User;
 use dnj\ErrorTracker\Laravel\Server\Models\App;
 use dnj\ErrorTracker\Laravel\Server\Tests\TestCase;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class AppManagerTest extends TestCase
 {
-    public function testUserCanSearch(): void
+    public function testSearch(): void
     {
-        App::factory(2)->create();
+        /**
+         * @var App $app1
+         * @var App $app2
+         * @var App $app3
+         */
+        $app1 = App::factory()
+            ->withTitle("test App 1")
+            ->create();
 
-        $response = $this->get(route('apps.index', ['title' => 'test', 'owner' => 1, 'user' => 1]));
+        $app2 = App::factory()
+            ->withTitle("test App 2")
+            ->create();
+    
+        $app3 = App::factory()
+            ->withTitle("App 3")
+            ->create();
 
-        $response->assertStatus(ResponseAlias::HTTP_OK); // 200
+        $apps = $this->getAppManager()->search(['title' => 'test']);
+        $appIds = array_column(iterator_to_array($apps), 'id');
+        $this->assertContains($app1->id, $appIds);
+        $this->assertContains($app2->id, $appIds);
+        $this->assertNotContains($app3->id, $appIds);
+
+        $apps = $this->getAppManager()->search(['title' => 'test', 'owner' => $app1->owner_id]);
+        $appIds = array_column(iterator_to_array($apps), 'id');
+        $this->assertContains($app1->id, $appIds);
+        $this->assertNotContains($app2->id, $appIds);
+        $this->assertNotContains($app3->id, $appIds);
+    
+        $apps = $this->getAppManager()->search(['title' => 'test', 'owner' => $app1->owner]);
+        $appIds = array_column(iterator_to_array($apps), 'id');
+        $this->assertContains($app1->id, $appIds);
+        $this->assertNotContains($app2->id, $appIds);
+        $this->assertNotContains($app3->id, $appIds);
     }
 
-    public function testUserCanStore(): void
+    public function testStore(): void
     {
         $data = [
             'title' => 'Test App',
-            'extra' => ['test_key' => 'test_value'],
-            'owner' => 1,
+            'meta' => ['key1' => 'v2'],
+            'owner' => User::factory()->create(),
         ];
 
-        $this->postJson(route('apps.store'), $data)
-            ->assertStatus(ResponseAlias::HTTP_CREATED) // 201
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $data = $this->prepareForAssert($data);
-        $this->assertDatabaseHas('apps', $data);
-        $this->assertDatabaseCount('apps', 1);
+        $app = $this->getAppManager()->store($data['title'], $data['owner'], $data['meta'], true);
+        $this->assertModelExists($app);
+        $this->assertSame($data['title'], $app->getTitle());
+        $this->assertSame($data['meta'], $app->getMeta());
+        $this->assertSame($data['owner']->id, $app->getOwnerUserId());
     }
 
-    public function testUserCanNotStore(): void
+    public function testUpdate(): void
     {
-        $data = [
-            'title' => '',
-            'extra' => [''],
-            'owner' => '',
-        ];
-
-        $this->postJson(route('apps.store'), $data)
-            ->assertStatus(ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) // 422
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $this->assertDatabaseCount('apps', 0);
-    }
-
-    public function testCanUpdateApp(): void
-    {
-        $app = App::factory()->create();
-
         $changes = [
-            'title' => 'Test App edited',
-            'extra' => ['test_key' => 'test_value'],
-            'owner' => 3,
+            'title' => 'Test App',
+            'meta' => ['key1' => 'v2'],
+            'owner' => User::factory()->create(),
         ];
-
-        $this->putJson(route('apps.update', ['app' => $app->id]), $changes)
-            ->assertStatus(ResponseAlias::HTTP_OK)
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $changes = $this->prepareForAssert($changes);
-        $this->assertDatabaseHas('apps', $changes);
-        $this->assertDatabaseCount('apps', 1);
-    }
-
-    public function testCanNotUpdateApp(): void
-    {
-        $changes = [];
-
-        $this->putJson(route('apps.update', ['app' => 100]), $changes)
-            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND) // 404
-            ->assertJson(function (AssertableJson $json) {
-                $json->etc();
-            });
-
-        $this->assertDatabaseCount('apps', 0);
+        $app = App::factory()->create();
+        $app = $this->getAppManager()->update($app, $changes, true);
+        $this->assertSame($changes['title'], $app->getTitle());
+        $this->assertSame($changes['meta'], $app->getMeta());
+        $this->assertSame($changes['owner']->id, $app->getOwnerUserId());
     }
 
     public function testDestroy(): void
     {
         $app = App::factory()->create();
-
-        $this->deleteJson(route('apps.destroy', ['app' => $app->id]))
-            ->assertStatus(ResponseAlias::HTTP_OK); // 200
+        $this->getAppManager()->destroy($app, true);
+        $this->assertModelMissing($app);
     }
 
-    public function testCanNotDestroy(): void
-    {
-        $app = App::factory()->create();
-
-        $this->deleteJson(route('apps.destroy', ['app' => 100]))
-            ->assertStatus(ResponseAlias::HTTP_NOT_FOUND); // 404
-    }
-
-    public function prepareForAssert(array $changes): array
-    {
-        $changes['extra'] = json_encode($changes['extra']);
-        $changes['owner_id'] = $changes['owner'];
-        unset($changes['owner']);
-
-        return $changes;
-    }
 }

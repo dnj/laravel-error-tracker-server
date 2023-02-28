@@ -3,10 +3,11 @@
 namespace dnj\ErrorTracker\Laravel\Server\Http\Controllers;
 
 use dnj\ErrorTracker\Contracts\IDeviceManager;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\SearchRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\StoreRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Device\UpdateRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\Device\DeviceResource;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\DeviceSearchRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\DeviceStoreRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\DeviceUpdateRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Resources\DeviceResource;
+use dnj\ErrorTracker\Laravel\Server\Models\Device;
 
 class DeviceController extends Controller
 {
@@ -14,40 +15,31 @@ class DeviceController extends Controller
     {
     }
 
-    public function index(SearchRequest $searchRequest): DeviceResource
+    public function index(DeviceSearchRequest $request): DeviceResource
     {
-        $search = $this->deviceManager->search($searchRequest->only(
-            [
-                'title',
-                'user',
-                'owner',
-            ]
-        ));
+        $devices = Device::query()->filter($request->validated())->cursorPaginate();
 
-        return new DeviceResource($search);
+        return DeviceResource::make($devices);
     }
 
-    public function store(StoreRequest $storeRequest): DeviceResource
+    public function store(DeviceStoreRequest $request): DeviceResource
     {
-        $store = $this->deviceManager->store(
-            $storeRequest->input('title'),
-            $storeRequest->input('extra'),
-            $storeRequest->input('owner'),
-            userActivityLog: true,
-        );
+        $data = $request->validated();
+        $device = $this->deviceManager->store($data['title'] ?? null, $data['owner'] ?? null, $data['meta'] ?? null, true);
 
-        return DeviceResource::make($store);
+        return DeviceResource::make($device);
     }
 
-    public function update(int $device, UpdateRequest $updateRequest): DeviceResource
+    public function update(int $device, DeviceUpdateRequest $request): DeviceResource
     {
-        $update = $this->deviceManager->update($device, $updateRequest->validated(), userActivityLog: true);
+        $changes = $request->validated();
+        $device = $this->deviceManager->update($device, $changes, true);
 
-        return DeviceResource::make($update);
+        return DeviceResource::make($device);
     }
 
-    public function destroy(int $device)
+    public function destroy(int $device): void
     {
-        $this->deviceManager->destroy($device, userActivityLog: true);
+        $this->deviceManager->destroy($device, true);
     }
 }

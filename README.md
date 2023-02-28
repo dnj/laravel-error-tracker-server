@@ -35,7 +35,7 @@ Laravel uses Package Auto-Discovery, so doesn't require you to manually add the 
 #### Copy the package config to your local config with the publish command:
 
 ```shell
-php artisan vendor:publish --provider="dnj\ErrorTracker\Laravel\Server"
+php artisan vendor:publish --provider="dnj\ErrorTracker\Laravel\Server\ServiceProvider"
 ```
 
 #### Config file
@@ -45,7 +45,7 @@ php artisan vendor:publish --provider="dnj\ErrorTracker\Laravel\Server"
 
 return [
     // Define your user model class for connect entities to users.
-    'user_model' => null,
+    'user_model' => \dnj\AAA\Models\User::class,
 
     'routes' => [
         'enable' => true,
@@ -58,18 +58,20 @@ return [
 ---
 
 ℹ️ **Note**
-> User activity logs are **enabled** by default, if you want to save them set `$userActivityLog` to false.
+> User activity logs are **disabled** by default, if you want to save them set `$userActivityLog` to true.
 
 Example :
 
 ```php
-$appManager = app(\dnj\ErrorTracker\Contracts\IApp::class);
+use dnj\ErrorTracker\Contracts\IAppManager;
+
+$appManager = app(IAppManager::class);
+
 $app = $appManager->store(
-  title:'Sell Department',
-  ownerId: 1,
-  OwnerIdColumn: 'owner_id',
-  extra: json_encode(['data' => 'etc']),
-  userActivityLog: false  // disabled 
+  title: 'Android mobile app',
+  owner: 1,
+  meta: ['key' => 'value']),
+  userActivityLog: false,
 ); 
 ```
 
@@ -78,50 +80,59 @@ $app = $appManager->store(
 * Search Applications:
 
 ```php
-$appManager = app(\dnj\ErrorTracker\Contracts\IApp::class);
+use dnj\ErrorTracker\Contracts\IAppManager;
 
-$app = $appManager->search(
-  filters:
-  ['title' => 'sales'], 
-  ['owner' => 1], 
-  ['user' => '1']
+$appManager = app(IAppManager::class);
+
+$apps = $appManager->search(
+  filters: [
+    'title' => 'mobile app'
+    'owner' => 2
+  ],
 );
 ```
 
 * Create new Application:
 
 ```php
-$appManager = app(\dnj\ErrorTracker\Contracts\IAppManager::class);
+use dnj\ErrorTracker\Contracts\IAppManager;
+
+$appManager = app(IAppManager::class);
 
 $app = $appManager->store(
-        title:'new application',
-        ownerId: 1,
-        OwnerIdColumn: 'owner_id',
-        extra: json_encode(['data' => 'etc']));
+  title: 'Android mobile app',
+  owner: 1,
+  meta: ['key' => 'value']),
+  userActivityLog: false,
+); 
 ```
 
 * Update Application:
 
 ```php
-$appManager = app(\dnj\ErrorTracker\Contracts\IAppManager::class);
+use dnj\ErrorTracker\Contracts\IAppManager;
+
+$appManager = app(IAppManager::class);
 
 $app = $appManager->update(
-  id:1,
+  app: 1,
   changes: [
-            'title' => 'new title', 
-            'ownerId' => 1, 
-            'extra' => ['any'],
-           ]
-);
+    'title' => 'new title',
+    'owner' => 2,
+  ],
+  userActivityLog: true,
+); 
 ```
 
 * Delete application:
 
 ```php
-$appManager = app(\dnj\ErrorTracker\Contracts\IAppManager::class);
+use dnj\ErrorTracker\Contracts\IAppManager;
+
+$appManager = app(IAppManager::class);
 
 $appManager->destroy(
-  id:1,
+  log: 1,
   userActivityLog: false,
 );
 
@@ -134,50 +145,61 @@ $appManager->destroy(
 * Search Device:
 
 ```php
-$deviceManager = app(\dnj\ErrorTracker\Contracts\IDeviceManager::class);
+use dnj\ErrorTracker\Contracts\IDeviceManager;
 
-$app = $deviceManager->search(
-  filters:
-  ['title' => 'device'], 
-  ['owner' => 1], 
-  ['user' => '1']
+$deviceManager = app(IDeviceManager::class);
+
+$devices = $deviceManager->search(
+  filters: [
+    'title' => 'Nokia Mobile'
+    'owner' => 2
+  ],
 );
 ```
 
 * Create new device:
 
 ```php
-$deviceManager = app(\dnj\ErrorTracker\Contracts\IDeviceManager::class);
+use dnj\ErrorTracker\Contracts\IDeviceManager;
 
-$app = $deviceManager->store(
-        title:'new device',
-        ownerId: 1,
-        OwnerIdColumn: 'owner_id',
-        extra: json_encode(['data' => 'etc']));
+$deviceManager = app(IDeviceManager::class);
+
+$device = $deviceManager->store(
+  title: 'Nokia mobile',
+  owner: 1,
+  meta: ['key' => 'value']),
+  userActivityLog: false,
+); 
 ```
 
 * Update Device:
 
 ```php
-$deviceManager = app(\dnj\ErrorTracker\Contracts\IDeviceManager::class);
+use dnj\ErrorTracker\Contracts\IDeviceManager;
+
+$deviceManager = app(IDeviceManager::class);
 
 $device = $deviceManager->update(
-  id:1,
+  device: 3,
   changes: [
-            'title' => 'new device name', 
-            'ownerId' => 1, 
-            'extra' => ['any'],
-           ]
-);
+    'title' => 'My Nokia Mobile',
+    'owner' => 2,
+    'meta' => ['serialNo' => 55245252]
+  ],
+  userActivityLog: true,
+); 
+
 ```
 
 * Delete application:
 
 ```php
-$deviceManager = app(\dnj\ErrorTracker\Contracts\IDeviceManager::class);
+use dnj\ErrorTracker\Contracts\IDeviceManager;
+
+$deviceManager = app(IDeviceManager::class);
 
 $deviceManager->destroy(
-  id:1,
+  log: 3,
   userActivityLog: false,
 );
 ```
@@ -189,70 +211,74 @@ $deviceManager->destroy(
 * Search Device:
 
 ```php
-use \dnj\ErrorTracker\Contracts\LogLevel;
-$logManager = app(\dnj\ErrorTracker\Contracts\ILogManager::class);
+use dnj\ErrorTracker\Contracts\ILogManager;
+use dnj\ErrorTracker\Contracts\LogLevel;
 
-$log = $logManager->search(
-  filters:
-  ['apps' => 1],                 // app id  
-  ['devices' => 1],              // devices id  
-  ['level' => LogLevel::INFO]    // importance
-  ['message' => 'text']          // message
-  ['unread' => true]             // bool = true OR false
-  ['user' => 1]                  // user id 
+$logManager = app(ILogManager::class);
+
+$logs = $logManager->search(
+  filters: [
+    'apps' => [1,2],
+    'devices' => [1],
+    'levels' => [LogLevel::DEBUG],
+    'message' => 'important flag',
+    'unread' => true,
+  ]
 );
 ```
 
 * Create new log:
 
 ```php
-use \dnj\ErrorTracker\Contracts\LogLevel;
+use dnj\ErrorTracker\Contracts\ILogManager;
+use dnj\ErrorTracker\Contracts\LogLevel;
 
-$logManager = app(\dnj\ErrorTracker\Contracts\ILogManager::class);
+$logManager = app(ILogManager::class);
 
 $log = $logManager->store(
-        app: 1,                                          // app id 
-        device: 1,                                       // device id
-        level: LogLevel::INFO,                           // importance
-        message: 'message',                              // message
-        data: ['data' => 'any'],                         // data 
-        read: ['userId' => 1, 'readAt' => Carbon::now()] // read or not read 
-        extra: json_encode(['data' => 'etc'])            // extra 
-        );
+  app: 1,
+  device: 1,
+  level: LogLevel::INFO,
+  message: 'App has been started',
+);
 ```
 
 * Mark as read log:
 
 ```php
-$logManager = app(\dnj\ErrorTracker\Contracts\ILogManager::class);
+use dnj\ErrorTracker\Contracts\ILogManager;
+use dnj\ErrorTracker\Contracts\LogLevel;
+
+$logManager = app(ILogManager::class);
 
 $log = $logManager->markAsRead(
-  id:1,
-  readAt: Carbon::now(); 
+  log: 44,
+  user: 3
 );
-
-
 ```
 * Mark as unread log:
 
 ```php
-$logManager = app(\dnj\ErrorTracker\Contracts\ILogManager::class);
+use dnj\ErrorTracker\Contracts\ILogManager;
+use dnj\ErrorTracker\Contracts\LogLevel;
+
+$logManager = app(ILogManager::class);
 
 $log = $logManager->markAsUnread(
-  id:1,
-  userId: null, 
-  readAt: null,
+  log: 44,
 );
 ```
 
 * Delete log:
 
 ```php
-$logManager  = app(\dnj\ErrorTracker\Contracts\ILogManager::class);
+use dnj\ErrorTracker\Contracts\ILogManager;
+
+$logManager = app(ILogManager::class);
 
 $logManager->destroy(
-  id:1,
-  userActivityLog: false,
+  log: 44,
+  userActivityLog: true,
 );
 ```
 
@@ -266,21 +292,6 @@ You can run unit tests with PHP Unit:
 ./vendor/bin/phpunit
 ```
 
-## How To use restful API
-
-A document in YAML format has been prepared for better familiarization and use of package web services. which is placed
-in the `docs/APIs` folder.
-
-**Postman:**
-
-* laravel-error-tracker-server.json
-
-**Open API:**
-
-* openApi.yaml
-
-To use this file, you can import it on the [stoplight.io](https://stoplight.io) site and see all available web services.
-Or open with PhpStorm.
 
 ## Contribution
 

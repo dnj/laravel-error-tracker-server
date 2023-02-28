@@ -3,10 +3,11 @@
 namespace dnj\ErrorTracker\Laravel\Server\Http\Controllers;
 
 use dnj\ErrorTracker\Contracts\IAppManager;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\SearchRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\StoreRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\App\UpdateRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\App\AppResource;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\AppSearchRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\AppStoreRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\AppUpdateRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Resources\AppResource;
+use dnj\ErrorTracker\Laravel\Server\Models\App;
 
 class AppController extends Controller
 {
@@ -14,40 +15,31 @@ class AppController extends Controller
     {
     }
 
-    public function index(SearchRequest $searchRequest): AppResource
+    public function index(AppSearchRequest $request): AppResource
     {
-        $search = $this->appManager->search($searchRequest->only(
-            [
-                'title',
-                'owner',
-                'user',
-            ]
-        ));
+        $apps = App::query()->filter($request->validated())->cursorPaginate();
 
-        return new AppResource($search);
+        return AppResource::make($apps);
     }
 
-    public function store(StoreRequest $storeRequest): AppResource
+    public function store(AppStoreRequest $request): AppResource
     {
-        $store = $this->appManager->store(
-            $storeRequest->input('title'),
-            $storeRequest->input('extra'),
-            $storeRequest->input('owner'),
-            userActivityLog: true
-        );
+        $data = $request->validated();
+        $app = $this->appManager->store($data['title'],$data['owner'], $data['meta'] ?? null, true);
 
-        return AppResource::make($store);
+        return AppResource::make($app);
     }
 
-    public function update(int $app, UpdateRequest $updateRequest): AppResource
+    public function update(int $app, AppUpdateRequest $request): AppResource
     {
-        $update = $this->appManager->update($app, $updateRequest->validated(), userActivityLog: true);
+        $changes = $request->validated();
+        $app = $this->appManager->update($app, $changes, true);
 
-        return AppResource::make($update);
+        return AppResource::make($app);
     }
 
-    public function destroy(int $id): void
+    public function destroy(int $app): void
     {
-        $this->appManager->destroy($id, userActivityLog: true);
+        $this->appManager->destroy($app, true);
     }
 }

@@ -5,11 +5,11 @@ namespace dnj\ErrorTracker\Laravel\Server\Http\Controllers;
 use Carbon\Carbon;
 use dnj\ErrorTracker\Contracts\ILogManager;
 use dnj\ErrorTracker\Contracts\LogLevel;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Log\MarkAsReadRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Log\SearchRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Requests\Log\StoreRequest;
-use dnj\ErrorTracker\Laravel\Server\Http\Resources\Log\LogResource;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\LogSearchRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Requests\LogStoreRequest;
+use dnj\ErrorTracker\Laravel\Server\Http\Resources\LogResource;
 use dnj\ErrorTracker\Laravel\Server\Models\Log;
+use Illuminate\Support\Facades\Auth;
 
 class LogController extends Controller
 {
@@ -17,70 +17,45 @@ class LogController extends Controller
     {
     }
 
-    public function index(SearchRequest $searchRequest)
+    public function index(LogSearchRequest $request)
     {
-        $search = $this->logManager->search($searchRequest->only(
-            [
-                'apps',
-                'devices',
-                'levels',
-                'message',
-                'unread',
-                'user',
-            ]
-        ));
+        $logs = Log::query()->filter($request->validated())->cursorPaginate();
 
-        return new LogResource($search);
+        return LogResource::make($logs);
     }
 
-    public function store(StoreRequest $storeRequest): LogResource
+    public function store(LogStoreRequest $request): LogResource
     {
-        $levelValue = $this->getEnumValue($storeRequest);
+        $data = $request->validated();
+        $data['level'] = constant(LogLevel::class . "::" . $data['level']);
         $log = $this->logManager->store(
-            $storeRequest->input('app'),
-            $storeRequest->input('device'),
-            $levelValue,
-            $storeRequest->input('message'),
-            $storeRequest->input('data'),
-            $storeRequest->input('read'),
-            userActivityLog: true
+            $data['app'],
+            $data['device'],
+            $data['level'],
+            $data['message'],
+            $data['data'],
+            null,
         );
 
         return LogResource::make($log);
     }
 
-    public function markAsRead(Log $log, MarkAsReadRequest $markAsReadRequest): LogResource
+    public function markAsRead(int $log): LogResource
     {
-        $markAsRead = $this->logManager->markAsRead(
-            $log,
-            $markAsReadRequest->get('userId'),
-            Carbon::make($markAsReadRequest->get('readAt')),
-            userActivityLog: true);
+        $log = $this->logManager->markAsRead($log, Auth::getUser(), null, true);
 
-        return LogResource::make($markAsRead);
+        return LogResource::make($log);
     }
 
-    public function markAsUnRead(Log $log): LogResource
+    public function markAsUnread(int $log): LogResource
     {
-        $markAsUnread = $this->logManager->markAsUnread($log, userActivityLog: true);
+        $log = $this->logManager->markAsUnread($log, true);
 
-        return LogResource::make($markAsUnread);
+        return LogResource::make($log);
     }
 
-    public function destroy(int $log)
+    public function destroy(int $log): void
     {
-        $this->logManager->destroy($log, userActivityLog: true);
-    }
-
-    public function getEnumValue(StoreRequest $storeRequest): ?LogLevel
-    {
-        $value = null;
-        foreach (LogLevel::cases() as $case) {
-            if ($case->name == $storeRequest->input('level')) {
-                $value = $case;
-            }
-        }
-
-        return $value;
+        $this->logManager->destroy($log, true);
     }
 }
