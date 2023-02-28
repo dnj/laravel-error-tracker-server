@@ -15,6 +15,7 @@ jobs:
 
       - uses: php-actions/phpunit@v3
         with:
+          version: 9
           php_extensions: bcmath xdebug gd mbstring imagick
           php_version: "8.1"
           args: --coverage-clover=coverage/clover-coverage.xml
