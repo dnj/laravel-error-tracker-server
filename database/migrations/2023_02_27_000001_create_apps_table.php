@@ -12,7 +12,9 @@ return new class() extends Migration {
             $table->id();
             $table->string('title');
             $table->json('meta')->nullable();
-            $table->foreignIdFor(User::class, 'owner_id')->nullable();
+            $table->foreignId('owner_id')
+                ->nullable()
+                ->constrained((new User())->getTable(), 'id');
             $table->timestamps();
         });
     }
