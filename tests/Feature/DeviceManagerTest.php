@@ -16,15 +16,15 @@ class DeviceManagerTest extends TestCase
          * @var Device $device3
          */
         $device1 = Device::factory()
-            ->withTitle("test Device 1")
+            ->withTitle('test Device 1')
             ->create();
 
         $device2 = Device::factory()
-            ->withTitle("test Device 2")
+            ->withTitle('test Device 2')
             ->create();
 
         $device3 = Device::factory()
-            ->withTitle("Device 3")
+            ->withTitle('Device 3')
             ->create();
 
         $devices = $this->getDeviceManager()->search(['title' => 'test']);

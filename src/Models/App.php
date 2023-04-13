@@ -57,7 +57,7 @@ class App extends Model implements IApp
             $builder->where('owner_id', $filters['owner']);
         }
         if (isset($filters['title'])) {
-            $builder->where('title', 'LIKE', '%' . $filters['title'] . '%');
+            $builder->where('title', 'LIKE', '%'.$filters['title'].'%');
         }
         if (isset($filters['user'])) {
             // TODO

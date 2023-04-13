@@ -52,9 +52,9 @@ class Device extends Model implements IDevice
 
     public function scopeFilter(Builder $builder, array $filters)
     {
-        if (array_key_exists("owner", $filters)) {
-            if ($filters === null) {
-                $builder->whereNull("owner_id");
+        if (array_key_exists('owner', $filters)) {
+            if (null === $filters) {
+                $builder->whereNull('owner_id');
             } else {
                 if ($filters['owner'] instanceof Authenticatable) {
                     $filters['owner'] = $filters['owner']->getAuthIdentifier();
@@ -63,7 +63,7 @@ class Device extends Model implements IDevice
             }
         }
         if (isset($filters['title'])) {
-            $builder->where('title', 'LIKE', '%' . $filters['title'] . '%');
+            $builder->where('title', 'LIKE', '%'.$filters['title'].'%');
         }
         if (isset($filters['user'])) {
             // TODO

@@ -17,46 +17,46 @@ class LogManagerTest extends TestCase
         $device = Device::factory()->create();
         $log1 = Log::factory()->withLevel(LogLevel::ERROR)->withApp($app)->create();
         $log2 = Log::factory()->withLevel(LogLevel::INFO)->withDevice($device)->read()->create();
-        $log3 = Log::factory()->withLevel(LogLevel::DEBUG)->withMessage("non critical error")->create();
+        $log3 = Log::factory()->withLevel(LogLevel::DEBUG)->withMessage('non critical error')->create();
 
-        $logs = $this->getLogManager()->search(array(
+        $logs = $this->getLogManager()->search([
             'apps' => [$app->id],
-        ));
+        ]);
         $this->assertTrue($logs->contains($log1));
         $this->assertFalse($logs->contains($log2));
         $this->assertFalse($logs->contains($log3));
 
-        $logs = $this->getLogManager()->search(array(
+        $logs = $this->getLogManager()->search([
             'devices' => [$device->id],
-        ));
+        ]);
         $this->assertFalse($logs->contains($log1));
         $this->assertTrue($logs->contains($log2));
         $this->assertFalse($logs->contains($log3));
 
-        $logs = $this->getLogManager()->search(array(
+        $logs = $this->getLogManager()->search([
             'levels' => [LogLevel::DEBUG, LogLevel::ERROR],
-        ));
+        ]);
         $this->assertTrue($logs->contains($log1));
         $this->assertFalse($logs->contains($log2));
         $this->assertTrue($logs->contains($log3));
 
-        $logs = $this->getLogManager()->search(array(
-            'message' => 'critical'
-        ));
+        $logs = $this->getLogManager()->search([
+            'message' => 'critical',
+        ]);
         $this->assertFalse($logs->contains($log1));
         $this->assertFalse($logs->contains($log2));
         $this->assertTrue($logs->contains($log3));
 
-        $logs = $this->getLogManager()->search(array(
-            'unread' => false
-        ));
+        $logs = $this->getLogManager()->search([
+            'unread' => false,
+        ]);
         $this->assertFalse($logs->contains($log1));
         $this->assertTrue($logs->contains($log2));
         $this->assertFalse($logs->contains($log3));
-    
-        $logs = $this->getLogManager()->search(array(
-            'unread' => true
-        ));
+
+        $logs = $this->getLogManager()->search([
+            'unread' => true,
+        ]);
         $this->assertTrue($logs->contains($log1));
         $this->assertFalse($logs->contains($log2));
         $this->assertTrue($logs->contains($log3));
@@ -98,7 +98,6 @@ class LogManagerTest extends TestCase
         $log = $this->getLogManager()->markAsUnread($log, true);
         $this->assertNull($log->getReaderUserId());
     }
-
 
     public function testDestroy(): void
     {

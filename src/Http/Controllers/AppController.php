@@ -25,7 +25,7 @@ class AppController extends Controller
     public function store(AppStoreRequest $request): AppResource
     {
         $data = $request->validated();
-        $app = $this->appManager->store($data['title'],$data['owner'], $data['meta'] ?? null, true);
+        $app = $this->appManager->store($data['title'], $data['owner'], $data['meta'] ?? null, true);
 
         return AppResource::make($app);
     }

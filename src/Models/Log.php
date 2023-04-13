@@ -10,7 +10,6 @@ use dnj\ErrorTracker\Contracts\ILog;
 use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Laravel\Database\Factories\LogFactory;
 use dnj\UserLogger\Concerns\Loggable;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -67,27 +66,27 @@ class Log extends Model implements ILog
     {
         if (isset($filters['apps'])) {
             $filters['apps'] = array_map(fn ($v) => $v instanceof IApp ? $v->getId() : $v, $filters['apps']);
-            $builder->whereIn("app_id", $filters['apps']);
+            $builder->whereIn('app_id', $filters['apps']);
         }
         if (isset($filters['devices'])) {
             $filters['devices'] = array_map(fn ($v) => $v instanceof IDevice ? $v->getId() : $v, $filters['devices']);
-            $builder->whereIn("device_id", $filters['devices']);
+            $builder->whereIn('device_id', $filters['devices']);
         }
         if (isset($filters['levels'])) {
             $filters['levels'] = array_map(fn ($v) => $v->name, $filters['levels']);
-            $builder->whereIn("level", $filters['levels']);
+            $builder->whereIn('level', $filters['levels']);
         }
         if (isset($filters['message'])) {
-            $builder->where("message", "LIKE", "%" . $filters['message'] . "%");
+            $builder->where('message', 'LIKE', '%'.$filters['message'].'%');
         }
         if (isset($filters['unread'])) {
             if ($filters['unread']) {
-                $builder->whereNull("read_at");
+                $builder->whereNull('read_at');
             } else {
-                $builder->whereNotNull("read_at");
+                $builder->whereNotNull('read_at');
             }
         }
-        
+
         if (isset($filters['user'])) {
             // TODO
         }

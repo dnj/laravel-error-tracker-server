@@ -16,15 +16,15 @@ class AppManagerTest extends TestCase
          * @var App $app3
          */
         $app1 = App::factory()
-            ->withTitle("test App 1")
+            ->withTitle('test App 1')
             ->create();
 
         $app2 = App::factory()
-            ->withTitle("test App 2")
+            ->withTitle('test App 2')
             ->create();
-    
+
         $app3 = App::factory()
-            ->withTitle("App 3")
+            ->withTitle('App 3')
             ->create();
 
         $apps = $this->getAppManager()->search(['title' => 'test']);
@@ -38,7 +38,7 @@ class AppManagerTest extends TestCase
         $this->assertContains($app1->id, $appIds);
         $this->assertNotContains($app2->id, $appIds);
         $this->assertNotContains($app3->id, $appIds);
-    
+
         $apps = $this->getAppManager()->search(['title' => 'test', 'owner' => $app1->owner]);
         $appIds = array_column(iterator_to_array($apps), 'id');
         $this->assertContains($app1->id, $appIds);
@@ -81,5 +81,4 @@ class AppManagerTest extends TestCase
         $this->getAppManager()->destroy($app, true);
         $this->assertModelMissing($app);
     }
-
 }

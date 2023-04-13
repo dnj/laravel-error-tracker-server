@@ -2,7 +2,6 @@
 
 namespace dnj\ErrorTracker\Laravel\Server\Http\Controllers;
 
-use Carbon\Carbon;
 use dnj\ErrorTracker\Contracts\ILogManager;
 use dnj\ErrorTracker\Contracts\LogLevel;
 use dnj\ErrorTracker\Laravel\Server\Http\Requests\LogSearchRequest;
@@ -27,7 +26,7 @@ class LogController extends Controller
     public function store(LogStoreRequest $request): LogResource
     {
         $data = $request->validated();
-        $data['level'] = constant(LogLevel::class . "::" . $data['level']);
+        $data['level'] = constant(LogLevel::class.'::'.$data['level']);
         $log = $this->logManager->store(
             $data['app'],
             $data['device'],

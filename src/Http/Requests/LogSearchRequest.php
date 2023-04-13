@@ -11,20 +11,20 @@ use Illuminate\Validation\Rules\Exists;
 
 class LogSearchRequest extends FormRequest
 {
-	public function rules(): array
-	{
-		return [
-			'apps' => ['array', 'required', 'sometimes'],
-			'apps.*' => [new Exists(App::class, 'id')],
+    public function rules(): array
+    {
+        return [
+            'apps' => ['array', 'required', 'sometimes'],
+            'apps.*' => [new Exists(App::class, 'id')],
 
-			'devices' => ['array', 'nullable'],
-			'devices.*' => [new Exists(Device::class, 'id')],
+            'devices' => ['array', 'nullable'],
+            'devices.*' => [new Exists(Device::class, 'id')],
 
-			'levels' => ['array', 'nullable'],
-			'levels.*' => [Rule::in(array_column(LogLevel::cases(), 'key'))],
+            'levels' => ['array', 'nullable'],
+            'levels.*' => [Rule::in(array_column(LogLevel::cases(), 'key'))],
 
-			'message' => ['string'],
-			'unread' => ['bool'],
-		];
-	}
+            'message' => ['string'],
+            'unread' => ['bool'],
+        ];
+    }
 }

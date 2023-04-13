@@ -18,7 +18,7 @@ class LogManager implements ILogManager
     public function __construct(protected ILogger $userLogger)
     {
     }
-    
+
     /**
      * @return Collection<Log>
      */
@@ -29,7 +29,7 @@ class LogManager implements ILogManager
 
     public function store(int|IApp $app, IDevice|int $device, LogLevel $level, string $message, ?array $data = null, ?array $read = null): Log
     {
-        return DB::transaction(function() use ($app, $device, $level, $message, $data, $read) {
+        return DB::transaction(function () use ($app, $device, $level, $message, $data, $read) {
             if ($app instanceof IApp) {
                 $app = $app->getId();
             }
@@ -45,7 +45,7 @@ class LogManager implements ILogManager
                     $read['user'] = $read['user']->getAuthIdentifier();
                 }
             }
-            $log = Log::query()->create(array(
+            $log = Log::query()->create([
                 'app_id' => $app,
                 'device_id' => $device,
                 'level' => $level,
@@ -53,15 +53,14 @@ class LogManager implements ILogManager
                 'data' => $data,
                 'reader_id' => $read ? $read['user'] : null,
                 'read_at' => $read ? $read['readAt'] : null,
-            ));
-
+            ]);
 
             return $log;
         });
     }
 
-    public function markAsRead(ILog|int $log, int|Authenticatable $user, ?\DateTimeInterface $readAt = null, bool $userActivityLog = false): Log {
-
+    public function markAsRead(ILog|int $log, int|Authenticatable $user, ?\DateTimeInterface $readAt = null, bool $userActivityLog = false): Log
+    {
         return DB::transaction(function () use ($log, $user, $readAt) {
             if ($log instanceof ILog) {
                 $log = $log->getId();
@@ -72,17 +71,17 @@ class LogManager implements ILogManager
             if (!$readAt) {
                 $readAt = now();
             }
-            
+
             /**
              * @var Log
              */
             $log = Log::query()
                 ->lockForUpdate()
                 ->findOrFail($log);
-            $log->update(array(
+            $log->update([
                 'reader_id' => $user,
                 'read_at' => $readAt,
-            ));
+            ]);
 
             return $log;
         });
@@ -101,10 +100,10 @@ class LogManager implements ILogManager
             $log = Log::query()
                 ->lockForUpdate()
                 ->findOrFail($log)
-                ->fill(array(
+                ->fill([
                     'reader_id' => null,
                     'read_at' => null,
-                ));
+                ]);
             $changes = $log->changesForLog();
             $log->save();
 
@@ -112,7 +111,7 @@ class LogManager implements ILogManager
                 $this->userLogger->on($log)
                     ->withRequest(request())
                     ->withProperties($changes)
-                    ->log("mark-as-unread");
+                    ->log('mark-as-unread');
             }
 
             return $log;
@@ -137,7 +136,7 @@ class LogManager implements ILogManager
             if ($userActivityLog) {
                 $this->userLogger->on($log)
                     ->withRequest(request())
-                    ->log("destroyed");
+                    ->log('destroyed');
             }
         });
     }

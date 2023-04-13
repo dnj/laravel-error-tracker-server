@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AppSearchRequest extends FormRequest
 {
-	/**
-	 * @return array<string,mixed[]>
-	 */
-	public function rules(): array
-	{
-		return [
-			'title' => ['string', 'required', 'sometimes'],
-			'owner' => ['int','required', 'sometimes'],
-		];
-	}
+    /**
+     * @return array<string,mixed[]>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => ['string', 'required', 'sometimes'],
+            'owner' => ['int', 'required', 'sometimes'],
+        ];
+    }
 }

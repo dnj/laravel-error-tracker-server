@@ -2,7 +2,6 @@
 
 namespace dnj\ErrorTracker\Laravel\Server;
 
-use dnj\AAA\Contracts\IUser;
 use dnj\ErrorTracker\Contracts\IApp;
 use dnj\ErrorTracker\Contracts\IAppManager;
 use dnj\ErrorTracker\Laravel\Server\Models\App;

@@ -6,11 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DeviceSearchRequest extends FormRequest
 {
-	public function rules(): array
-	{
-		return [
-			'title' => ['string', 'required', 'sometimes'],
-			'owner' => ['int','required', 'sometimes'],
-		];
-	}
+    public function rules(): array
+    {
+        return [
+            'title' => ['string', 'required', 'sometimes'],
+            'owner' => ['int', 'required', 'sometimes'],
+        ];
+    }
 }
