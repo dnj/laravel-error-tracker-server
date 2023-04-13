@@ -5,9 +5,10 @@ namespace dnj\ErrorTracker\Laravel\Server;
 use dnj\ErrorTracker\Contracts\IAppManager;
 use dnj\ErrorTracker\Contracts\IDeviceManager;
 use dnj\ErrorTracker\Contracts\ILogManager;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
-class ServerProvider extends BaseServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     public function register()
     {
