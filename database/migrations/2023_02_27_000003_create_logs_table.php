@@ -2,8 +2,6 @@
 
 use dnj\AAA\Models\User;
 use dnj\ErrorTracker\Contracts\LogLevel;
-use dnj\ErrorTracker\Laravel\Server\Models\App;
-use dnj\ErrorTracker\Laravel\Server\Models\Device;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,21 +12,21 @@ return new class() extends Migration {
         Schema::create('error_tracker_logs', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(App::class, 'app_id')
-                ->references('id')
+            $table->foreignId('app_id')
+                ->constrained('error_tracker_apps', 'id')
                 ->cascadeOnDelete();
 
-            $table->foreignIdFor(Device::class, 'device_id')
-                ->references('id')
+            $table->foreignId('device_id')
+                ->constrained('error_tracker_devices', 'id')
                 ->cascadeOnDelete();
 
-            $table->foreignIdFor(User::class, 'reader_id')
+            $table->foreignId('reader_id')
                 ->nullable()
-                ->references('id')
+                ->constrained((new User())->getTable(), 'id')
                 ->cascadeOnDelete();
 
             $table->timestamp('read_at')->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
             $table->enum('level', array_column(LogLevel::cases(), 'name'));
             $table->string('message');
             $table->json('data')->nullable();

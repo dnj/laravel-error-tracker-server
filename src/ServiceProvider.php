@@ -16,7 +16,6 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->singleton(IAppManager::class, AppManager::class);
         $this->app->singleton(IDeviceManager::class, DeviceManager::class);
         $this->app->singleton(ILogManager::class, LogManager::class);
-        // TODO
     }
 
     public function boot()
@@ -28,8 +27,6 @@ class ServiceProvider extends BaseServiceProvider
                 __DIR__.'/../config/error-tracker.php' => config_path('error-tracker.php'),
             ], 'config');
         }
-
-        // TODO
     }
 
     protected function loadRoutes()
